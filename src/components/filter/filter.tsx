@@ -1,46 +1,44 @@
 import React from "react";
 import { useMovies } from "../../redux/data/hooks/selectors";
-
-const Selectors = {
-  WATCHLIST: `isInWatchlist`,
-  HISTORY: `isInWatched`,
-  FAVORITE: `isInFavorite`,
-};
+import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
+import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
+import { FilterType } from "../../const";
+import { getFilterItemCount } from "../../utils/filter";
 
 const Filter: React.FC = (): JSX.Element => {
   const movies = useMovies();
-  const getFilterItemCount = (item: any): number => {
-    return movies.filter((movie) => {
-      // @ts-ignore
-      return movie.userDetails[item];
-    }).length;
+  const currentFilterType = useCurrentFilterType();
+  const setFilterType = useSetFilterType();
+
+  const getMoviesCountByFilter = getFilterItemCount(movies);
+
+  const onFilterItemClickHandler = (filterType: string) => (
+    evt: React.MouseEvent,
+  ) => {
+    evt.preventDefault();
+    setFilterType(filterType);
   };
+
   return (
     <div className="main-navigation__items">
-      <a
-        href="#all"
-        className="main-navigation__item main-navigation__item--active"
-      >
-        All movies
-      </a>
-      <a href="#watchlist" className="main-navigation__item">
-        Watchlist
-        <span className="main-navigation__item-count">
-          {getFilterItemCount(Selectors.WATCHLIST)}
-        </span>
-      </a>
-      <a href="#history" className="main-navigation__item">
-        History
-        <span className="main-navigation__item-count">
-          {getFilterItemCount(Selectors.HISTORY)}
-        </span>
-      </a>
-      <a href="#favorites" className="main-navigation__item">
-        Favorites
-        <span className="main-navigation__item-count">
-          {getFilterItemCount(Selectors.FAVORITE)}
-        </span>
-      </a>
+      {Object.values(FilterType).map((filter) => (
+        <a
+          onClick={onFilterItemClickHandler(filter)}
+          href={`#${filter.toLowerCase()}`}
+          className={`main-navigation__item ${
+            filter === currentFilterType ? `main-navigation__item--active` : ``
+          }`}
+        >
+          {filter === "All" ? "All movies" : filter}
+          {filter !== "All" ? (
+            <span className="main-navigation__item-count">
+              {getMoviesCountByFilter(filter)}
+            </span>
+          ) : (
+            ""
+          )}
+        </a>
+      ))}
     </div>
   );
 };
