@@ -21,18 +21,20 @@ const Filter: React.FC = (): JSX.Element => {
 
   return (
     <div className="main-navigation__items">
-      {Object.values(FilterType).map((filter) => (
+      {Object.values(FilterType).map((filterType) => (
         <a
-          onClick={onFilterItemClickHandler(filter)}
-          href={`#${filter.toLowerCase()}`}
+          onClick={onFilterItemClickHandler(filterType)}
+          href={`#${filterType.toLowerCase()}`}
           className={`main-navigation__item ${
-            filter === currentFilterType ? `main-navigation__item--active` : ``
+            filterType === currentFilterType
+              ? `main-navigation__item--active`
+              : ``
           }`}
         >
-          {filter === "All" ? "All movies" : filter}
-          {filter !== "All" ? (
+          {filterType === "All" ? "All movies" : filterType}
+          {filterType !== "All" ? (
             <span className="main-navigation__item-count">
-              {getMoviesCountByFilter(filter)}
+              {getMoviesCountByFilter(filterType)}
             </span>
           ) : (
             ""
