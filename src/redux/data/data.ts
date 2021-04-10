@@ -3,9 +3,12 @@ import { Comment, CommentBackend, Movie, MovieBackend } from "../../types";
 import { commentAdapter, movieAdapter } from "../adapter/adapter";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
 
+const CUT_LENGTH = 5;
+
 export const initialState = {
   movies: [] as Movie[],
   movieComments: [] as Comment[],
+  showedMoviesCount: CUT_LENGTH as number,
 };
 
 type InitialStateType = typeof initialState;
@@ -14,6 +17,8 @@ type ThunkActionType = BaseThunkActionType<AllReduxActions>;
 const ActionType = {
   LOAD_MOVIES: `LOAD_MOVIES`,
   LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
+  SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
+  SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
 } as const;
 
 export const ActionCreator = {
@@ -30,6 +35,16 @@ export const ActionCreator = {
       payload: comments,
     };
   },
+
+  showMoreMovies: () => ({
+    type: ActionType.SHOW_MORE_MOVIES,
+    payload: CUT_LENGTH,
+  }),
+
+  setDefaultMoviesCount: () => ({
+    type: ActionType.SET_DEFAULT_MOVIES_COUNT,
+    payload: CUT_LENGTH,
+  }),
 };
 
 export const Operation = {
@@ -63,6 +78,13 @@ export const reducer = (
       return { ...state, movies: action.payload };
     case ActionType.LOAD_MOVIE_COMMENTS:
       return { ...state, movieComments: action.payload };
+    case ActionType.SHOW_MORE_MOVIES:
+      return {
+        ...state,
+        showedMoviesCount: state.showedMoviesCount + action.payload,
+      };
+    case ActionType.SET_DEFAULT_MOVIES_COUNT:
+      return { ...state, showedMoviesCount: action.payload };
     default:
       return state;
   }
