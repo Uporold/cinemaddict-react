@@ -1,23 +1,16 @@
-import React, { useMemo } from "react";
+import React from "react";
 import FilmsList from "../films-list/films-list";
-import { useMovies, useShowedMovies } from "../../redux/data/hooks/selectors";
+import { useShowedMovies } from "../../redux/data/hooks/selectors";
+import {
+  useMostCommentedMovies,
+  useTopRatedMovies,
+} from "../../redux/app/hooks/selectors";
 
 const FilmsSection: React.FC = (): JSX.Element => {
-  const movies = useMovies();
   const showedMovies = useShowedMovies();
-  const topRatedMovies = movies
-    .slice()
-    .sort((a, b) => b.filmInfo.rating - a.filmInfo.rating)
-    .slice(0, 2);
+  const topRatedMovies = useTopRatedMovies();
+  const mostCommentedMovies = useMostCommentedMovies();
 
-  const mostCommentedMovies = useMemo(
-    () =>
-      movies
-        .slice()
-        .sort((a, b) => b.commentsIds.length - a.commentsIds.length)
-        .slice(0, 2),
-    [movies],
-  );
   return (
     <section className="films">
       <FilmsList movies={showedMovies} />

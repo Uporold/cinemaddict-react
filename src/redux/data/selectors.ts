@@ -15,3 +15,17 @@ export const getShowedMovies = createSelector(
   getShowedMoviesCount,
   (movies, count) => movies.slice(0, count),
 );
+
+export const getTopRatedMovies = createSelector(getMovies, (movies) =>
+  movies
+    .slice()
+    .sort((a, b) => b.filmInfo.rating - a.filmInfo.rating)
+    .slice(0, 2),
+);
+
+export const getMostCommentedMovies = createSelector(getMovies, (movies) =>
+  movies
+    .slice()
+    .sort((a, b) => b.commentsIds.length - a.commentsIds.length)
+    .slice(0, 2),
+);
