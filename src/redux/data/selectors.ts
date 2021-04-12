@@ -1,6 +1,9 @@
 import { createSelector } from "reselect";
 import { GlobalState } from "../reducer";
 import { Comment, Movie } from "../../types";
+import { getMoviesByFilter } from "../../utils/filter";
+import { getMoviesBySort } from "../../utils/sorting";
+import { getFilterType, getSortType } from "../app/selectors";
 
 export const getMovies = (state: GlobalState): Movie[] => state.DATA.movies;
 
@@ -28,4 +31,17 @@ export const getMostCommentedMovies = createSelector(getMovies, (movies) =>
     .slice()
     .sort((a, b) => b.commentsIds.length - a.commentsIds.length)
     .slice(0, 2),
+);
+
+export const getShowedSortedFilteredMovies = createSelector(
+  getMovies,
+  getShowedMoviesCount,
+  getFilterType,
+  getSortType,
+  (movies, count, filterType, sortType) => {
+    return getMoviesByFilter(
+      getMoviesBySort(movies, sortType),
+      filterType,
+    ).slice(0, count);
+  },
 );

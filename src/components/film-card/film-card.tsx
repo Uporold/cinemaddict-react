@@ -20,7 +20,6 @@ const getSlicedDescription = (description: string, length: number): string => {
 const FilmCard: React.FC<Props> = memo(
   ({ movie }): JSX.Element => {
     const { id, commentsIds, filmInfo, userDetails } = movie;
-    console.log(id);
     const watchlist = userDetails.isInWatchlist
       ? `film-card__controls-item--active`
       : ``;
@@ -30,6 +29,7 @@ const FilmCard: React.FC<Props> = memo(
     const favorites = userDetails.isInFavorite
       ? `film-card__controls-item--active`
       : ``;
+    console.log(movie.filmInfo.releaseDate.valueOf());
     return (
       <article className="film-card">
         <h3 className="film-card__title">{filmInfo.title}</h3>

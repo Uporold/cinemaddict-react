@@ -18,6 +18,22 @@ export const getFilterItemCount = (movies: Movie[]) => (
         return movie.userDetails.isInWatchlist;
       }).length;
     default:
-      return 0;
+      return movies.length;
+  }
+};
+
+export const getMoviesByFilter = (
+  movies: Movie[],
+  filterType: string,
+): Movie[] => {
+  switch (filterType) {
+    case FilterType.WATCHLIST:
+      return movies.filter((movie) => movie.userDetails.isInWatchlist);
+    case FilterType.HISTORY:
+      return movies.filter((movie) => movie.userDetails.isInWatched);
+    case FilterType.FAVORITES:
+      return movies.filter((movie) => movie.userDetails.isInFavorite);
+    default:
+      return movies;
   }
 };

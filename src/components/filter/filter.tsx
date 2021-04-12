@@ -29,10 +29,14 @@ const Filter: React.FC = (): JSX.Element => {
             filterType === currentFilterType
               ? `main-navigation__item--active`
               : ``
+          } ${
+            getMoviesCountByFilter(filterType) === 0
+              ? `main-navigation__item--disabled`
+              : ``
           }`}
         >
-          {filterType === "All" ? "All movies" : filterType}
-          {filterType !== "All" ? (
+          {filterType === FilterType.ALL ? "All movies" : filterType}
+          {filterType !== FilterType.ALL ? (
             <span className="main-navigation__item-count">
               {getMoviesCountByFilter(filterType)}
             </span>
