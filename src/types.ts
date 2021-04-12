@@ -11,7 +11,7 @@ export interface MovieBackend {
   film_info: {
     actors: string[];
     age_rating: number;
-    alternate_title: string;
+    alternative_title: string;
     description: string;
     director: string;
     genre: string[];
@@ -27,7 +27,7 @@ export interface MovieBackend {
   };
   user_details: {
     already_watched: boolean;
-    watching_date: Date;
+    watching_date: Date | null;
     favorite: boolean;
     watchlist: boolean;
   };
@@ -49,12 +49,18 @@ interface MovieInfo {
   writers: string[];
 }
 
-interface UserDetails {
+export interface UserDetails {
   isInWatched: boolean;
-  watchingDate: Date;
+  watchingDate: Date | null;
   isInFavorite: boolean;
   isInWatchlist: boolean;
 }
+
+export type UserDetailsToUpdate = {
+  isInWatched: boolean;
+  isInFavorite: boolean;
+  isInWatchlist: boolean;
+};
 
 export interface Comment {
   id: number;

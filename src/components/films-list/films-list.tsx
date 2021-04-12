@@ -6,7 +6,6 @@ import { useMovies } from "../../redux/data/hooks/selectors";
 import { useShowMoreMovies } from "../../redux/data/hooks/useShowMoreMovies";
 import { getFilterItemCount } from "../../utils/filter";
 import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
-import { FilterType } from "../../const";
 
 interface Props {
   movies: Movie[];

@@ -19,6 +19,7 @@ const ActionType = {
   LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
   SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
   SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
+  UPDATE_USER_DETAILS: `UPDATE_USER_DETAILS`,
 } as const;
 
 export const ActionCreator = {
@@ -45,6 +46,13 @@ export const ActionCreator = {
     type: ActionType.SET_DEFAULT_MOVIES_COUNT,
     payload: CUT_LENGTH,
   }),
+
+  updateUserDetails: (movie: Movie) => {
+    return {
+      type: ActionType.UPDATE_USER_DETAILS,
+      payload: movie,
+    };
+  },
 };
 
 export const Operation = {
@@ -67,6 +75,18 @@ export const Operation = {
     );
     dispatch(ActionCreator.loadMovieComments(loadedComments));
   },
+
+  updateUserDetails: (movie: MovieBackend): ThunkActionType => async (
+    dispatch,
+    getState,
+    api,
+  ) => {
+    const response: AxiosResponse<MovieBackend> = await api.put(
+      `/movies/${movie.id}`,
+      movie,
+    );
+    dispatch(ActionCreator.updateUserDetails(movieAdapter(response.data)));
+  },
 };
 
 export const reducer = (
@@ -85,6 +105,13 @@ export const reducer = (
       };
     case ActionType.SET_DEFAULT_MOVIES_COUNT:
       return { ...state, showedMoviesCount: action.payload };
+    case ActionType.UPDATE_USER_DETAILS:
+      return {
+        ...state,
+        movies: state.movies.map((item) =>
+          item.id === action.payload.id ? action.payload : item,
+        ),
+      };
     default:
       return state;
   }

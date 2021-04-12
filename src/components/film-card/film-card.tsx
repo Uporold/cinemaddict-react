@@ -2,7 +2,9 @@ import React, { memo } from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import { Movie } from "../../types";
+import { Movie, UserDetailsToUpdate } from "../../types";
+import { useUpdateUserDetails } from "../../redux/data/hooks/useUpdateUserDetails";
+import { toRawMovie } from "../../redux/adapter/adapter";
 
 dayjs.extend(duration);
 
@@ -29,7 +31,21 @@ const FilmCard: React.FC<Props> = memo(
     const favorites = userDetails.isInFavorite
       ? `film-card__controls-item--active`
       : ``;
-    console.log(movie.filmInfo.releaseDate.valueOf());
+
+    const updateUserDetails = useUpdateUserDetails();
+
+    const updateUserDetailsHandler = (
+      target: keyof UserDetailsToUpdate,
+    ) => () => {
+      const newMovie = movie;
+      newMovie.userDetails[target] = !movie.userDetails[target];
+      if (target === `isInWatched`) {
+        newMovie.userDetails.watchingDate = newMovie.userDetails[target]
+          ? new Date()
+          : null;
+      }
+      updateUserDetails(toRawMovie(newMovie));
+    };
     return (
       <article className="film-card">
         <h3 className="film-card__title">{filmInfo.title}</h3>
@@ -59,18 +75,21 @@ const FilmCard: React.FC<Props> = memo(
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlist}`}
+              onClick={updateUserDetailsHandler(`isInWatchlist`)}
             >
               Add to watchlist
             </button>
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--mark-as-watched ${history}`}
+              onClick={updateUserDetailsHandler(`isInWatched`)}
             >
               Mark as watched
             </button>
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--favorite ${favorites}`}
+              onClick={updateUserDetailsHandler(`isInFavorite`)}
             >
               Mark as favorite
             </button>

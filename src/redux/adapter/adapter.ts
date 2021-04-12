@@ -9,7 +9,7 @@ export const movieAdapter = (data: MovieBackend): Movie => {
     filmInfo: {
       actors: info.actors,
       ageRating: info.age_rating,
-      alternateTitle: info.alternate_title,
+      alternateTitle: info.alternative_title,
       description: info.description,
       director: info.director,
       genre: info.genre,
@@ -26,6 +26,36 @@ export const movieAdapter = (data: MovieBackend): Movie => {
       watchingDate: userDetails.watching_date,
       isInFavorite: userDetails.favorite,
       isInWatchlist: userDetails.watchlist,
+    },
+  };
+};
+
+export const toRawMovie = (data: Movie): MovieBackend => {
+  return {
+    id: String(data.id),
+    comments: data.commentsIds.map((id) => String(id)),
+    film_info: {
+      title: data.filmInfo.title,
+      alternative_title: data.filmInfo.alternateTitle,
+      total_rating: data.filmInfo.rating,
+      poster: data.filmInfo.poster,
+      age_rating: data.filmInfo.ageRating,
+      director: data.filmInfo.director,
+      writers: data.filmInfo.writers,
+      actors: data.filmInfo.actors,
+      release: {
+        date: data.filmInfo.releaseDate.toJSON(),
+        release_country: data.filmInfo.country,
+      },
+      runtime: data.filmInfo.runtime,
+      genre: data.filmInfo.genre,
+      description: data.filmInfo.description,
+    },
+    user_details: {
+      watchlist: data.userDetails.isInWatchlist,
+      already_watched: data.userDetails.isInWatched,
+      watching_date: data.userDetails.watchingDate,
+      favorite: data.userDetails.isInFavorite,
     },
   };
 };
