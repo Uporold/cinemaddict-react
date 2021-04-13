@@ -527,16 +527,8 @@ button {
 }
 
 .film-details {
-  position: fixed;
-  height: 100vh;
-  top: 0;
-  right: 0;
-  left: 10%;
-  z-index: 1;
   background-color: #212126;
   box-shadow: -3px 2px 13px 0 #141628;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .film-details__inner {

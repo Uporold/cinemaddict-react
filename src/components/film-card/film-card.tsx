@@ -2,9 +2,11 @@ import React, { memo } from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
+import { Link } from "react-router-dom";
 import { Movie, UserDetailsToUpdate } from "../../types";
 import { useUpdateUserDetails } from "../../redux/data/hooks/useUpdateUserDetails";
 import { toRawMovie } from "../../redux/adapter/adapter";
+import { useUpdateUserDetailsHandler } from "../../hooks/useUpdateUserDetailsHandler";
 
 dayjs.extend(duration);
 
@@ -32,20 +34,8 @@ const FilmCard: React.FC<Props> = memo(
       ? `film-card__controls-item--active`
       : ``;
 
-    const updateUserDetails = useUpdateUserDetails();
+    const updateUserDetailsHandler = useUpdateUserDetailsHandler(movie);
 
-    const updateUserDetailsHandler = (
-      target: keyof UserDetailsToUpdate,
-    ) => () => {
-      const newMovie = movie;
-      newMovie.userDetails[target] = !movie.userDetails[target];
-      if (target === `isInWatched`) {
-        newMovie.userDetails.watchingDate = newMovie.userDetails[target]
-          ? new Date()
-          : null;
-      }
-      updateUserDetails(toRawMovie(newMovie));
-    };
     return (
       <article className="film-card">
         <h3 className="film-card__title">{filmInfo.title}</h3>
@@ -68,9 +58,9 @@ const FilmCard: React.FC<Props> = memo(
           {getSlicedDescription(filmInfo.description, 140)}
         </p>
         <div className="film-card__bottom-container">
-          <a href={id.toString()} className="film-card__comments">
+          <Link to={`/movies/${id}`} className="film-card__comments">
             {commentsIds.length} comments
-          </a>
+          </Link>
           <form className="film-card__controls">
             <button
               type="button"

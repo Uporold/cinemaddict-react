@@ -56,11 +56,11 @@ export interface UserDetails {
   isInWatchlist: boolean;
 }
 
-export type UserDetailsToUpdate = {
+export interface UserDetailsToUpdate {
   isInWatched: boolean;
   isInFavorite: boolean;
   isInWatchlist: boolean;
-};
+}
 
 export interface Comment {
   id: number;

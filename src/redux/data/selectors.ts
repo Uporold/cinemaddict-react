@@ -45,3 +45,8 @@ export const getShowedSortedFilteredMovies = createSelector(
     ).slice(0, count);
   },
 );
+
+export const getCurrentMovie = (id: number) =>
+  createSelector(getMovies, (movies) =>
+    movies.find((movie) => movie.id === Number(id)),
+  );

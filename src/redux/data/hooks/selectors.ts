@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Comment, Movie } from "../../../types";
 import {
+  getCurrentMovie,
   getMovieComments,
   getMovies,
   getShowedMovies,
@@ -17,4 +18,8 @@ export const useShowedMovies = (): Movie[] => {
 
 export const useShowedSortedFilteredMovies = (): Movie[] => {
   return useSelector(getShowedSortedFilteredMovies);
+};
+
+export const useCurrentMovie = (id: number): Movie => {
+  return useSelector(getCurrentMovie(id)) as Movie;
 };
