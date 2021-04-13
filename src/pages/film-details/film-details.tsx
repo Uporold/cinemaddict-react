@@ -37,7 +37,7 @@ const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
 
         <div className="form-details__bottom-container">
           <FilmDetailsComments />
-          <FilmDetailsCommentForm />
+          <FilmDetailsCommentForm movieId={movieId} />
         </div>
       </form>
     </section>

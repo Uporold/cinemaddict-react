@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { emojis } from "../../const";
+import { useSendComment } from "../../redux/data/hooks/useSendComment";
 
-const FilmDetailsCommentForm: React.FC = (): JSX.Element => {
+interface Props {
+  movieId: number;
+}
+
+const FilmDetailsCommentForm: React.FC<Props> = ({ movieId }): JSX.Element => {
   const [emoji, setEmoji] = useState(``);
   const [comment, setComment] = useState(``);
 
@@ -12,8 +17,26 @@ const FilmDetailsCommentForm: React.FC = (): JSX.Element => {
   const onCommentChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(evt.target.value);
   };
+
+  const sendComment = useSendComment();
+  const onSendCommentHandler = (evt: React.KeyboardEvent<HTMLFormElement>) => {
+    if (evt.key === "Enter") {
+      const data = {
+        comment,
+        emotion: emoji,
+        date: new Date().toJSON(),
+      };
+      sendComment(movieId, data);
+      evt.currentTarget.reset();
+      setComment(``);
+      setEmoji(``);
+    }
+  };
   return (
-    <form className="film-details__new-comment">
+    <form
+      className="film-details__new-comment"
+      onKeyPress={onSendCommentHandler}
+    >
       <div className="film-details__add-emoji-label">
         {emoji ? (
           <img

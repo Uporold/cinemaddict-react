@@ -1,5 +1,11 @@
 import { AxiosResponse } from "axios";
-import { Comment, CommentBackend, Movie, MovieBackend } from "../../types";
+import {
+  Comment,
+  CommentBackend,
+  CommentPure,
+  Movie,
+  MovieBackend,
+} from "../../types";
 import { commentAdapter, movieAdapter } from "../adapter/adapter";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
 
@@ -17,6 +23,8 @@ type ThunkActionType = BaseThunkActionType<AllReduxActions>;
 const ActionType = {
   LOAD_MOVIES: `LOAD_MOVIES`,
   LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
+  SEND_COMMENT: `SEND_COMMENT`,
+  UPDATE_MOVIE_COMMENTS: `UPDATE_MOVIE_COMMENTS`,
   SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
   SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
   UPDATE_USER_DETAILS: `UPDATE_USER_DETAILS`,
@@ -37,6 +45,13 @@ export const ActionCreator = {
     };
   },
 
+  sendComment: (comment: Comment) => {
+    return {
+      type: ActionType.SEND_COMMENT,
+      payload: comment,
+    };
+  },
+
   showMoreMovies: () => ({
     type: ActionType.SHOW_MORE_MOVIES,
     payload: CUT_LENGTH,
@@ -53,13 +68,20 @@ export const ActionCreator = {
       payload: movie,
     };
   },
+
+  updateMovieComments: (movie: Movie) => {
+    return {
+      type: ActionType.UPDATE_MOVIE_COMMENTS,
+      payload: movie,
+    };
+  },
 };
 
 export const Operation = {
   loadMovies: (): ThunkActionType => async (dispatch, getState, api) => {
     const response: AxiosResponse<MovieBackend[]> = await api.get("/movies");
     const loadedMovies = response.data.map((movie) => movieAdapter(movie));
-    await dispatch(ActionCreator.loadMovies(loadedMovies));
+    dispatch(ActionCreator.loadMovies(loadedMovies));
   },
 
   loadMovieComments: (movieId: number): ThunkActionType => async (
@@ -87,6 +109,27 @@ export const Operation = {
     );
     dispatch(ActionCreator.updateUserDetails(movieAdapter(response.data)));
   },
+
+  sendComment: (
+    movieId: number,
+    comment: CommentPure,
+  ): ThunkActionType => async (dispatch, getState, api) => {
+    const response: AxiosResponse = await api.post(`/comments/${movieId}`, {
+      comment: comment.comment,
+      date: comment.date,
+      emotion: comment.emotion,
+    });
+    dispatch(
+      ActionCreator.sendComment(
+        commentAdapter(
+          response.data.comments[response.data.comments.length - 1],
+        ),
+      ),
+    );
+    dispatch(
+      ActionCreator.updateMovieComments(movieAdapter(response.data.movie)),
+    );
+  },
 };
 
 export const reducer = (
@@ -106,6 +149,18 @@ export const reducer = (
     case ActionType.SET_DEFAULT_MOVIES_COUNT:
       return { ...state, showedMoviesCount: action.payload };
     case ActionType.UPDATE_USER_DETAILS:
+      return {
+        ...state,
+        movies: state.movies.map((item) =>
+          item.id === action.payload.id ? action.payload : item,
+        ),
+      };
+    case ActionType.SEND_COMMENT:
+      return {
+        ...state,
+        movieComments: [...state.movieComments, action.payload],
+      };
+    case ActionType.UPDATE_MOVIE_COMMENTS:
       return {
         ...state,
         movies: state.movies.map((item) =>

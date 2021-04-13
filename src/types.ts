@@ -70,6 +70,12 @@ export interface Comment {
   emotion: string;
 }
 
+export interface CommentPure {
+  comment: string;
+  date: string;
+  emotion: string;
+}
+
 export interface CommentBackend {
   id: string;
   author: string;
