@@ -25,6 +25,7 @@ const ActionType = {
   LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
   SEND_COMMENT: `SEND_COMMENT`,
   UPDATE_MOVIE_COMMENTS: `UPDATE_MOVIE_COMMENTS`,
+  DELETE_MOVIE_COMMENT: `DELETE_MOVIE_COMMENT`,
   SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
   SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
   UPDATE_USER_DETAILS: `UPDATE_USER_DETAILS`,
@@ -49,6 +50,13 @@ export const ActionCreator = {
     return {
       type: ActionType.SEND_COMMENT,
       payload: comment,
+    };
+  },
+
+  deleteComment: (commentId: number) => {
+    return {
+      type: ActionType.DELETE_MOVIE_COMMENT,
+      payload: commentId,
     };
   },
 
@@ -130,6 +138,15 @@ export const Operation = {
       ActionCreator.updateMovieComments(movieAdapter(response.data.movie)),
     );
   },
+
+  deleteComment: (commentId: number): ThunkActionType => async (
+    dispatch,
+    getState,
+    api,
+  ) => {
+    await api.delete(`/comments/${commentId}`);
+    dispatch(ActionCreator.deleteComment(commentId));
+  },
 };
 
 export const reducer = (
@@ -166,6 +183,19 @@ export const reducer = (
         movies: state.movies.map((item) =>
           item.id === action.payload.id ? action.payload : item,
         ),
+      };
+    case ActionType.DELETE_MOVIE_COMMENT:
+      return {
+        ...state,
+        movieComments: state.movieComments.filter(
+          (comment) => comment.id !== action.payload,
+        ),
+        movies: state.movies.map((item) => {
+          if (!item.commentsIds.includes(action.payload)) return item;
+          const index = item.commentsIds.indexOf(action.payload);
+          item.commentsIds.splice(index, 1);
+          return item;
+        }),
       };
     default:
       return state;
