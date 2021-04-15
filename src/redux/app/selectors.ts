@@ -5,3 +5,6 @@ export const getFilterType = (state: GlobalState): string =>
 
 export const getSortType = (state: GlobalState): string =>
   state.APP.currentSortType;
+
+export const getStatisticStatus = (state: GlobalState): boolean =>
+  state.APP.isStatisticMode;

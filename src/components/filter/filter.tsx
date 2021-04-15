@@ -1,14 +1,21 @@
 import React from "react";
 import { useMovies } from "../../redux/data/hooks/selectors";
-import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
+import {
+  useCurrentFilterType,
+  useStatisticStatus,
+} from "../../redux/app/hooks/selectors";
 import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
 import { FilterType } from "../../const";
 import { getFilterItemCount } from "../../utils/filter";
+import { useSetStatisticMode } from "../../redux/app/hooks/useSetStatisticMode";
 
 const Filter: React.FC = (): JSX.Element => {
   const movies = useMovies();
   const currentFilterType = useCurrentFilterType();
   const setFilterType = useSetFilterType();
+
+  const isStatisticOpen = useStatisticStatus();
+  const closeStatistic = useSetStatisticMode();
 
   const getMoviesCountByFilter = getFilterItemCount(movies);
 
@@ -17,6 +24,7 @@ const Filter: React.FC = (): JSX.Element => {
   ) => {
     evt.preventDefault();
     setFilterType(filterType);
+    closeStatistic(false);
   };
 
   return (
@@ -26,7 +34,7 @@ const Filter: React.FC = (): JSX.Element => {
           onClick={onFilterItemClickHandler(filterType)}
           href={`#${filterType.toLowerCase()}`}
           className={`main-navigation__item ${
-            filterType === currentFilterType
+            filterType === currentFilterType && !isStatisticOpen
               ? `main-navigation__item--active`
               : ``
           } ${

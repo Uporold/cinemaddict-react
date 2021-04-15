@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { getFilterType, getSortType } from "../selectors";
+import { getFilterType, getSortType, getStatisticStatus } from "../selectors";
 import {
   getMostCommentedMovies,
   getTopRatedMovies,
@@ -12,6 +12,10 @@ export const useCurrentFilterType = (): string => {
 
 export const useCurrentSortType = (): string => {
   return useSelector(getSortType);
+};
+
+export const useStatisticStatus = (): boolean => {
+  return useSelector(getStatisticStatus);
 };
 
 export const useTopRatedMovies = (): Movie[] => {
