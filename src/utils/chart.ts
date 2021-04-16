@@ -87,7 +87,7 @@ export const getFilteredStatisticMovies = (
       case TimePeriod.ALL_TIME:
         return date > dueDate;
       case TimePeriod.TODAY:
-        return dueDate.diff(date, `day`, true) === 0;
+        return dueDate.diff(date, `day`) === 0;
       case TimePeriod.WEEK:
         return dueDate.diff(date, `week`) === 0;
       case TimePeriod.MONTH:
@@ -98,4 +98,20 @@ export const getFilteredStatisticMovies = (
         return false;
     }
   });
+};
+
+export const getTotalTime = (movies: Movie[]): number => {
+  let totalTime = 0;
+  movies.forEach((movie) => {
+    totalTime += movie.filmInfo.runtime;
+  });
+  return totalTime;
+};
+
+export const getAllGenres = (movies: Movie[]): string[] => {
+  const genres: string[] = [];
+  movies.forEach((movie) => {
+    genres.push(...movie.filmInfo.genre);
+  });
+  return genres;
 };

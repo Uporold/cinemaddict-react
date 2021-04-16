@@ -3,56 +3,35 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import StatisticFilter from "../statistic-filter/statistic-filter";
 import StatisticChart from "../statistic-chart/statistic-chart";
-import { getFilteredStatisticMovies, TimePeriod } from "../../utils/chart";
+import {
+  getFilteredStatisticMovies,
+  getTotalTime,
+  TimePeriod,
+} from "../../utils/chart";
 import { useMovies } from "../../redux/data/hooks/selectors";
 import { getUserRank } from "../header/header";
-import { Movie } from "../../types";
 
 dayjs.extend(duration);
 
-const getTotalTime = (movies: Movie[]) => {
-  let totalTime = 0;
-  movies.forEach((movie) => {
-    totalTime += movie.filmInfo.runtime;
-  });
-  return totalTime;
-};
-
-const getAllGenres = (movies: Movie[]) => {
-  const genres: string[] = [];
-  movies.forEach((movie) => {
-    genres.push(...movie.filmInfo.genre);
-  });
-  return genres;
-};
-
-const getTopGenre = (arr: string[]) => {
-  return arr
-    .slice()
-    .sort(
-      (a, b) =>
-        arr.filter((v) => v === a).length - arr.filter((v) => v === b).length,
-    )
-    .pop();
-};
-
 const Statistic: React.FC = (): JSX.Element => {
   const [currentStatisticFilter, setFilter] = useState(TimePeriod.ALL_TIME);
+  const [topGenreByTimePeriod, setGenre] = useState("");
   const movies = useMovies();
   const watchedMovies = getFilteredStatisticMovies(
     movies,
     currentStatisticFilter,
   );
-  console.log(watchedMovies);
   const rankByTimePeriod = getUserRank(watchedMovies);
-  const genres = getAllGenres(
-    getFilteredStatisticMovies(movies, currentStatisticFilter),
-  );
-  const topGenre = getTopGenre(genres);
 
-  const totalDuration = dayjs
-    .duration(getTotalTime(watchedMovies), `minutes`)
-    .format(`H[h] mm[m]`);
+  const totalDurationInMs = dayjs.duration(
+    getTotalTime(watchedMovies),
+    `minutes`,
+  );
+
+  const durationInHours =
+    totalDurationInMs.days() * 24 + totalDurationInMs.hours();
+  const durationInMinutes = totalDurationInMs.minutes();
+
   return (
     <section className="statistic">
       <p className="statistic__rank">
@@ -80,18 +59,26 @@ const Statistic: React.FC = (): JSX.Element => {
         </li>
         <li className="statistic__text-item">
           <h4 className="statistic__item-title">Total duration</h4>
-          <p className="statistic__item-text">{totalDuration}</p>
+          <p className="statistic__item-text">
+            {durationInHours}
+            <span className="statistic__item-description">h</span>{" "}
+            {durationInMinutes}
+            <span className="statistic__item-description">m</span>
+          </p>
         </li>
-        {topGenre ? (
+        {topGenreByTimePeriod ? (
           <li className="statistic__text-item">
             <h4 className="statistic__item-title">Top genre</h4>
-            <p className="statistic__item-text">{topGenre}</p>
+            <p className="statistic__item-text">{topGenreByTimePeriod}</p>
           </li>
         ) : (
           ``
         )}
       </ul>
-      <StatisticChart currentStatisticFilter={currentStatisticFilter} />
+      <StatisticChart
+        currentStatisticFilter={currentStatisticFilter}
+        setGenre={setGenre}
+      />
     </section>
   );
 };

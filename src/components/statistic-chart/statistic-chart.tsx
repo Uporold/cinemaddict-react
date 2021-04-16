@@ -1,31 +1,27 @@
 import React from "react";
 import { HorizontalBar } from "react-chartjs-2";
-import { Movie } from "../../types";
-import { ensure } from "../../utils/common";
+import { ensure, usePrevious } from "../../utils/common";
 import { useMovies } from "../../redux/data/hooks/selectors";
 import {
   BAR_HEIGHT,
+  getAllGenres,
   getFilteredStatisticMovies,
   setData,
   setOptions,
 } from "../../utils/chart";
 
-const getAllGenres = (movies: Movie[]) => {
-  const genres: string[] = [];
-  movies.forEach((movie) => {
-    genres.push(...movie.filmInfo.genre);
-  });
-  return genres;
-};
-
 interface Props {
   currentStatisticFilter: string;
+  setGenre: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const StatisticChart: React.FC<Props> = ({
   currentStatisticFilter,
+  setGenre,
 }): JSX.Element => {
   const movies = useMovies();
+  const prevFilter = usePrevious(currentStatisticFilter);
+
   const getData = (cb: ((genre: string) => number) | (() => boolean)) => {
     const reducer = (sum: Map<string, number>, genre: string) => {
       if (!sum.has(genre)) {
@@ -44,9 +40,14 @@ const StatisticChart: React.FC<Props> = ({
   };
 
   const getGenresTotal = (): [string, number][] => {
-    return getData(() => {
+    const data = getData(() => {
       return true;
     });
+
+    if (data.length) setGenre(data[0][0]);
+    if (!data.length) setGenre("");
+
+    return data;
   };
 
   const getChartData = (cb: () => [string, number][]) => {
@@ -55,10 +56,8 @@ const StatisticChart: React.FC<Props> = ({
   };
 
   const getChartHeight = (cb: () => [string, number][]) => {
-    return cb().length === 0 ? 0 : 450;
+    return cb().length * BAR_HEIGHT;
   };
-
-  console.log(getChartData(getGenresTotal));
 
   return (
     <div className="statistic__chart-wrap">
@@ -67,6 +66,7 @@ const StatisticChart: React.FC<Props> = ({
         height={getChartHeight(getGenresTotal)}
         data={getChartData(getGenresTotal)}
         options={setOptions()}
+        redraw={currentStatisticFilter !== prevFilter}
       />
     </div>
   );
