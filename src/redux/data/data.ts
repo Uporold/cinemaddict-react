@@ -8,6 +8,7 @@ import {
 } from "../../types";
 import { commentAdapter, movieAdapter } from "../adapter/adapter";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
+import { ActionCreator as AppActionCreator } from "../app/app";
 
 const CUT_LENGTH = 5;
 
@@ -122,21 +123,31 @@ export const Operation = {
     movieId: number,
     comment: CommentPure,
   ): ThunkActionType => async (dispatch, getState, api) => {
-    const response: AxiosResponse = await api.post(`/comments/${movieId}`, {
-      comment: comment.comment,
-      date: comment.date,
-      emotion: comment.emotion,
-    });
-    dispatch(
-      ActionCreator.sendComment(
-        commentAdapter(
-          response.data.comments[response.data.comments.length - 1],
+    dispatch(AppActionCreator.setFormBlockStatus(true));
+    try {
+      const response: AxiosResponse = await api.post(`/comments/${movieId}`, {
+        comment: comment.comment,
+        date: comment.date,
+        emotion: comment.emotion,
+      });
+      dispatch(
+        ActionCreator.sendComment(
+          commentAdapter(
+            response.data.comments[response.data.comments.length - 1],
+          ),
         ),
-      ),
-    );
-    dispatch(
-      ActionCreator.updateMovieComments(movieAdapter(response.data.movie)),
-    );
+      );
+      dispatch(
+        ActionCreator.updateMovieComments(movieAdapter(response.data.movie)),
+      );
+    } catch (err) {
+      dispatch(AppActionCreator.setFormBlockStatus(false));
+      dispatch(AppActionCreator.setFormErrorStatus(true));
+      setTimeout(
+        () => dispatch(AppActionCreator.setFormErrorStatus(false)),
+        600,
+      );
+    }
   },
 
   deleteComment: (commentId: number): ThunkActionType => async (

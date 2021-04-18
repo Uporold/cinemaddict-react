@@ -5,6 +5,8 @@ export const initialState = {
   currentFilterType: FilterType.ALL as string,
   currentSortType: SortType.DEFAULT as string,
   isStatisticMode: false,
+  isFormBlocked: false,
+  isFormError: false,
 };
 
 type InitialStateType = typeof initialState;
@@ -14,6 +16,8 @@ const ActionType = {
   SET_FILTER_TYPE: `SET_FILTER_TYPE`,
   SET_SORT_TYPE: `SET_SORT_TYPE`,
   SET_STATISTIC_MODE: `SET_STATISTIC_MODE`,
+  SET_FORM_ERROR_STATUS: `SET_FORM_ERROR_STATUS`,
+  SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
 } as const;
 
 export const ActionCreator = {
@@ -37,6 +41,20 @@ export const ActionCreator = {
       payload: status,
     };
   },
+
+  setFormErrorStatus: (status: boolean) => {
+    return {
+      type: ActionType.SET_FORM_ERROR_STATUS,
+      payload: status,
+    };
+  },
+
+  setFormBlockStatus: (status: boolean) => {
+    return {
+      type: ActionType.SET_FORM_BLOCK_STATUS,
+      payload: status,
+    };
+  },
 };
 
 export const reducer = (
@@ -50,6 +68,10 @@ export const reducer = (
       return { ...state, currentSortType: action.payload };
     case ActionType.SET_STATISTIC_MODE:
       return { ...state, isStatisticMode: action.payload };
+    case ActionType.SET_FORM_BLOCK_STATUS:
+      return { ...state, isFormBlocked: action.payload };
+    case ActionType.SET_FORM_ERROR_STATUS:
+      return { ...state, isFormError: action.payload };
     default:
       return state;
   }

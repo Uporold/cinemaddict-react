@@ -1,5 +1,11 @@
 import { useSelector } from "react-redux";
-import { getFilterType, getSortType, getStatisticStatus } from "../selectors";
+import {
+  getFilterType,
+  getFormBlockedStatus,
+  getFormErrorStatus,
+  getSortType,
+  getStatisticStatus,
+} from "../selectors";
 import {
   getMostCommentedMovies,
   getTopRatedMovies,
@@ -24,4 +30,12 @@ export const useTopRatedMovies = (): Movie[] => {
 
 export const useMostCommentedMovies = (): Movie[] => {
   return useSelector(getMostCommentedMovies);
+};
+
+export const useFormBlockedStatus = (): boolean => {
+  return useSelector(getFormBlockedStatus);
+};
+
+export const useFormErrorStatus = (): boolean => {
+  return useSelector(getFormErrorStatus);
 };

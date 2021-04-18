@@ -8,3 +8,8 @@ export const getSortType = (state: GlobalState): string =>
 
 export const getStatisticStatus = (state: GlobalState): boolean =>
   state.APP.isStatisticMode;
+
+export const getFormBlockedStatus = (state: GlobalState) =>
+  state.APP.isFormBlocked;
+
+export const getFormErrorStatus = (state: GlobalState) => state.APP.isFormError;
