@@ -20,7 +20,7 @@ const FilmDetailsCommentForm: React.FC<Props> = ({ movieId }): JSX.Element => {
 
   const sendComment = useSendComment();
   const onSendCommentHandler = (evt: React.KeyboardEvent<HTMLFormElement>) => {
-    if (evt.key === "Enter") {
+    if (evt.code === "Enter" && evt.ctrlKey) {
       const data = {
         comment,
         emotion: emoji,
