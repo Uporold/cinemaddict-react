@@ -4,7 +4,9 @@ import duration from "dayjs/plugin/duration";
 import StatisticFilter from "../statistic-filter/statistic-filter";
 import StatisticChart from "../statistic-chart/statistic-chart";
 import {
+  getAllGenres,
   getFilteredStatisticMovies,
+  getGenresByFrequency,
   getTotalTime,
   TimePeriod,
 } from "../../utils/chart";
@@ -15,7 +17,6 @@ dayjs.extend(duration);
 
 const Statistic: React.FC = (): JSX.Element => {
   const [currentStatisticFilter, setFilter] = useState(TimePeriod.ALL_TIME);
-  const [topGenreByTimePeriod, setGenre] = useState("");
   const movies = useMovies();
   const watchedMovies = getFilteredStatisticMovies(
     movies,
@@ -27,6 +28,16 @@ const Statistic: React.FC = (): JSX.Element => {
     getTotalTime(watchedMovies),
     `minutes`,
   );
+
+  const genresByFilter = getAllGenres(
+    getFilteredStatisticMovies(movies, currentStatisticFilter),
+  );
+
+  const genresByFrequency = getGenresByFrequency(genresByFilter);
+
+  const topGenreByTimePeriod = genresByFilter.length
+    ? genresByFrequency[0][0]
+    : "";
 
   const durationInHours =
     totalDurationInMs.days() * 24 + totalDurationInMs.hours();
@@ -75,10 +86,7 @@ const Statistic: React.FC = (): JSX.Element => {
           ``
         )}
       </ul>
-      <StatisticChart
-        currentStatisticFilter={currentStatisticFilter}
-        setGenre={setGenre}
-      />
+      <StatisticChart genresByFrequency={genresByFrequency} />
     </section>
   );
 };

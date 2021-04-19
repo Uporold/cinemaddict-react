@@ -25,7 +25,7 @@ const StatisticFilter: React.FC<Props> = ({
         const filterLowerCase =
           filter.charAt(0).toLowerCase() + filter.replace(` `, `-`).slice(1);
         return (
-          <>
+          <React.Fragment key={filter}>
             <input
               type="radio"
               className="statistic__filters-input visually-hidden"
@@ -33,6 +33,7 @@ const StatisticFilter: React.FC<Props> = ({
               id={`statistic-${filterLowerCase}`}
               value={`${filterLowerCase}`}
               checked={filter === currentStatisticFilter}
+              readOnly
             />
             <label
               htmlFor={`statistic-${filter}`}
@@ -41,7 +42,7 @@ const StatisticFilter: React.FC<Props> = ({
             >
               {filter}
             </label>
-          </>
+          </React.Fragment>
         );
       })}
     </form>

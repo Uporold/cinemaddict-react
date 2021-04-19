@@ -1,6 +1,7 @@
 import { ChartData, ChartOptions } from "chart.js";
 import dayjs from "dayjs";
 import { Movie } from "../types";
+import { ensure } from "./common";
 
 export const BAR_HEIGHT = 50;
 
@@ -114,4 +115,18 @@ export const getAllGenres = (movies: Movie[]): string[] => {
     genres.push(...movie.filmInfo.genre);
   });
   return genres;
+};
+
+export const getGenresByFrequency = (genres: string[]) => {
+  const reducer = (sum: Map<string, number>, genre: string) => {
+    if (!sum.has(genre)) {
+      sum.set(genre, 0);
+    }
+    sum.set(genre, ensure(sum.get(genre)) + 1);
+
+    return sum;
+  };
+  return Array.from(genres.reduce(reducer, new Map())).sort((a, b) => {
+    return b[1] - a[1];
+  });
 };

@@ -33,6 +33,7 @@ const Filter: React.FC = (): JSX.Element => {
         <a
           onClick={onFilterItemClickHandler(filterType)}
           href={`#${filterType.toLowerCase()}`}
+          key={filterType}
           className={`main-navigation__item ${
             filterType === currentFilterType && !isStatisticOpen
               ? `main-navigation__item--active`

@@ -16,7 +16,7 @@ const Sorting: React.FC = (): JSX.Element => {
   return (
     <ul className="sort">
       {Object.values(SortType).map((sortType) => (
-        <li>
+        <li key={sortType}>
           <a
             href={`#${sortType}`}
             onClick={onFilterItemClickHandler(sortType)}

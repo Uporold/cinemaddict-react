@@ -24,7 +24,7 @@ const FilmsList: React.FC<Props> = ({ movies, title }): JSX.Element => {
       </h2>
       <div className="films-list__container">
         {movies.map((movie) => (
-          <FilmCard movie={movie} />
+          <FilmCard key={movie.id + movie.filmInfo.title} movie={movie} />
         ))}
       </div>
       {movies.length < getMoviesCountByFilter(currentFilterType) && !title ? (
