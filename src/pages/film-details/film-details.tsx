@@ -20,6 +20,8 @@ const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
   const updateUserDetailsHandler = useUpdateUserDetailsHandler(movie);
   const loadMovieComments = useLoadMovieComments();
 
+  const { filmInfo, userDetails } = movie;
+
   useEffect(() => {
     loadMovieComments(movieId);
   }, [loadMovieComments, movieId]);
@@ -27,9 +29,9 @@ const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
   return (
     <section className="film-details">
       <div className="form-details__top-container">
-        <FilmDetailsInfo movie={movie} />
+        <FilmDetailsInfo filmInfo={filmInfo} />
         <FilmDetailsControls
-          userDetails={movie.userDetails}
+          userDetails={userDetails}
           updateUserDetailsHandler={updateUserDetailsHandler}
         />
       </div>

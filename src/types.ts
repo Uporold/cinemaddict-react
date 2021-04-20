@@ -33,7 +33,7 @@ export interface MovieBackend {
   };
 }
 
-interface MovieInfo {
+export interface MovieInfo {
   actors: string[];
   ageRating: number;
   alternateTitle: string;
