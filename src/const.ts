@@ -12,3 +12,14 @@ export const SortType = {
 };
 
 export const emojis = [`smile`, `sleeping`, `puke`, `angry`];
+
+export const PagePath = {
+  MAIN: `/`,
+  MOVIE: (id: number | string = `:id`): string => `/movies/${id}`,
+};
+
+export const Key = {
+  WATCHLIST: `isInWatchlist`,
+  HISTORY: `isInWatched`,
+  FAVORITE: `isInFavorite`,
+} as const;

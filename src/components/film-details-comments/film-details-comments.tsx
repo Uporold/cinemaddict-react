@@ -16,7 +16,7 @@ const FilmDetailsComments: React.FC = (): JSX.Element => {
       </h3>
       <ul className="film-details__comments-list">
         {comments.map((comment) => (
-          <FilmDetailsComment comment={comment} />
+          <FilmDetailsComment key={comment.id} comment={comment} />
         ))}
       </ul>
     </section>

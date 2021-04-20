@@ -3,10 +3,9 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { Link } from "react-router-dom";
-import { Movie, UserDetailsToUpdate } from "../../types";
-import { useUpdateUserDetails } from "../../redux/data/hooks/useUpdateUserDetails";
-import { toRawMovie } from "../../redux/adapter/adapter";
+import { Movie } from "../../types";
 import { useUpdateUserDetailsHandler } from "../../hooks/useUpdateUserDetailsHandler";
+import { Key, PagePath } from "../../const";
 
 dayjs.extend(duration);
 
@@ -58,28 +57,28 @@ const FilmCard: React.FC<Props> = memo(
           {getSlicedDescription(filmInfo.description, 140)}
         </p>
         <div className="film-card__bottom-container">
-          <Link to={`/movies/${id}`} className="film-card__comments">
+          <Link to={PagePath.MOVIE(id)} className="film-card__comments">
             {commentsIds.length} comments
           </Link>
           <form className="film-card__controls">
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlist}`}
-              onClick={updateUserDetailsHandler(`isInWatchlist`)}
+              onClick={updateUserDetailsHandler(Key.WATCHLIST)}
             >
               Add to watchlist
             </button>
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--mark-as-watched ${history}`}
-              onClick={updateUserDetailsHandler(`isInWatched`)}
+              onClick={updateUserDetailsHandler(Key.HISTORY)}
             >
               Mark as watched
             </button>
             <button
               type="button"
               className={`film-card__controls-item button film-card__controls-item--favorite ${favorites}`}
-              onClick={updateUserDetailsHandler(`isInFavorite`)}
+              onClick={updateUserDetailsHandler(Key.FAVORITE)}
             >
               Mark as favorite
             </button>

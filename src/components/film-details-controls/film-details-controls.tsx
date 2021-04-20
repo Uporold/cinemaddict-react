@@ -1,5 +1,6 @@
 import React from "react";
 import { UserDetails, UserDetailsToUpdate } from "../../types";
+import { Key } from "../../const";
 
 interface Props {
   userDetails: UserDetails;
@@ -17,11 +18,12 @@ const FilmDetailsControls: React.FC<Props> = ({
         className="film-details__control-input visually-hidden"
         name="watchlist"
         checked={userDetails.isInWatchlist}
+        readOnly
       />
       <label
         htmlFor="watchlist"
         className="film-details__control-label film-details__control-label--watchlist"
-        onClick={updateUserDetailsHandler(`isInWatchlist`)}
+        onClick={updateUserDetailsHandler(Key.WATCHLIST)}
       >
         Add to watchlist
       </label>
@@ -30,11 +32,12 @@ const FilmDetailsControls: React.FC<Props> = ({
         className="film-details__control-input visually-hidden"
         name="watched"
         checked={userDetails.isInWatched}
+        readOnly
       />
       <label
         htmlFor="watched"
         className="film-details__control-label film-details__control-label--watched"
-        onClick={updateUserDetailsHandler(`isInWatched`)}
+        onClick={updateUserDetailsHandler(Key.HISTORY)}
       >
         Already watched
       </label>
@@ -43,11 +46,12 @@ const FilmDetailsControls: React.FC<Props> = ({
         className="film-details__control-input visually-hidden"
         name="favorite"
         checked={userDetails.isInFavorite}
+        readOnly
       />
       <label
         htmlFor="favorite"
         className="film-details__control-label film-details__control-label--favorite"
-        onClick={updateUserDetailsHandler(`isInFavorite`)}
+        onClick={updateUserDetailsHandler(Key.FAVORITE)}
       >
         Add to favorites
       </label>

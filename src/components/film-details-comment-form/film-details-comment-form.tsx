@@ -86,6 +86,7 @@ const FilmDetailsCommentForm: React.FC<Props> = ({ movieId }): JSX.Element => {
         <div className="film-details__emoji-list">
           {emojis.map((emojiName) => (
             <label
+              key={emojiName}
               className="film-details__emoji-label"
               htmlFor={`emoji-${emojiName}`}
               onClick={onEmojiClickHandler(emojiName)}
@@ -96,6 +97,7 @@ const FilmDetailsCommentForm: React.FC<Props> = ({ movieId }): JSX.Element => {
                 type="radio"
                 value={`${emojiName}`}
                 checked={emoji === emojiName}
+                readOnly
               />
               <img
                 src={`/images/emoji/${emojiName}.png`}

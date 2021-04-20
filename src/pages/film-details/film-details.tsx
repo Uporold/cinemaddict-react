@@ -26,20 +26,18 @@ const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
 
   return (
     <section className="film-details">
-      <form className="film-details__inner" action="" method="get">
-        <div className="form-details__top-container">
-          <FilmDetailsInfo movie={movie} />
-          <FilmDetailsControls
-            userDetails={movie.userDetails}
-            updateUserDetailsHandler={updateUserDetailsHandler}
-          />
-        </div>
+      <div className="form-details__top-container">
+        <FilmDetailsInfo movie={movie} />
+        <FilmDetailsControls
+          userDetails={movie.userDetails}
+          updateUserDetailsHandler={updateUserDetailsHandler}
+        />
+      </div>
 
-        <div className="form-details__bottom-container">
-          <FilmDetailsComments />
-          <FilmDetailsCommentForm movieId={movieId} />
-        </div>
-      </form>
+      <div className="form-details__bottom-container">
+        <FilmDetailsComments />
+        <FilmDetailsCommentForm movieId={movieId} />
+      </div>
     </section>
   );
 };
