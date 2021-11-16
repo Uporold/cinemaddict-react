@@ -1,15 +1,20 @@
 import axios, { AxiosInstance } from "axios";
 
-const token = `1fedewehbdfdsffwerewrwewbvcb1337`;
+export const API_URL = `http://localhost:4000/`;
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({
-    baseURL: `https://11.ecmascript.pages.academy/cinemaddict/`,
+    baseURL: API_URL,
     timeout: 1000 * 5,
-    withCredentials: false,
-    headers: {
-      authorization: `Basic ${token}`,
-    },
+  });
+
+  api.interceptors.request.use((config) => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const { token } = JSON.parse(user);
+      config.headers.Authorization = token ? `Bearer ${token}` : "";
+    }
+    return config;
   });
 
   return api;

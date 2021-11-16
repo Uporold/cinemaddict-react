@@ -8,14 +8,14 @@ export const getMoviesBySort = (movies: Movie[], sortType: string): Movie[] => {
         .slice()
         .sort(
           (a, b) =>
-            b.filmInfo.releaseDate.valueOf() - a.filmInfo.releaseDate.valueOf(),
+            new Date(b.releaseDate).valueOf() -
+            new Date(a.releaseDate).valueOf(),
         );
     case SortType.RATING:
       return movies
         .slice()
         .sort(
-          (firstMovie, secondMovie) =>
-            secondMovie.filmInfo.rating - firstMovie.filmInfo.rating,
+          (firstMovie, secondMovie) => secondMovie.rating - firstMovie.rating,
         );
     default:
       return movies;

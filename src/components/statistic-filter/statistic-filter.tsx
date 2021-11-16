@@ -6,7 +6,7 @@ interface Props {
   setFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const StatisticFilter: React.FC<Props> = ({
+export const StatisticFilter: React.FC<Props> = ({
   currentStatisticFilter,
   setFilter,
 }): JSX.Element => {
@@ -48,5 +48,3 @@ const StatisticFilter: React.FC<Props> = ({
     </form>
   );
 };
-
-export default StatisticFilter;

@@ -76,11 +76,11 @@ export const getFilteredStatisticMovies = (
 ) => {
   const date = dayjs(new Date());
   return movies.filter((movie) => {
-    const dueDate = movie.userDetails.watchingDate
+    const dueDate = movie.userDetails?.watchingDate
       ? dayjs(movie.userDetails.watchingDate)
       : false;
 
-    if (!dueDate || !movie.userDetails.isInWatched) {
+    if (!dueDate || !movie.userDetails?.isWatched) {
       return false;
     }
 
@@ -104,7 +104,7 @@ export const getFilteredStatisticMovies = (
 export const getTotalTime = (movies: Movie[]): number => {
   let totalTime = 0;
   movies.forEach((movie) => {
-    totalTime += movie.filmInfo.runtime;
+    totalTime += movie.runtime;
   });
   return totalTime;
 };
@@ -112,7 +112,7 @@ export const getTotalTime = (movies: Movie[]): number => {
 export const getAllGenres = (movies: Movie[]): string[] => {
   const genres: string[] = [];
   movies.forEach((movie) => {
-    genres.push(...movie.filmInfo.genre);
+    genres.push(...movie.genres);
   });
   return genres;
 };

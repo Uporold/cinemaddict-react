@@ -1,85 +1,61 @@
 export interface Movie {
   id: number;
-  commentsIds: number[];
-  filmInfo: MovieInfo;
-  userDetails: UserDetails;
-}
-
-export interface MovieBackend {
-  id: string;
-  comments: string[];
-  film_info: {
-    actors: string[];
-    age_rating: number;
-    alternative_title: string;
-    description: string;
-    director: string;
-    genre: string[];
-    poster: string;
-    release: {
-      date: string;
-      release_country: string;
-    };
-    runtime: number;
-    title: string;
-    total_rating: number;
-    writers: string[];
-  };
-  user_details: {
-    already_watched: boolean;
-    watching_date: Date | null;
-    favorite: boolean;
-    watchlist: boolean;
-  };
-}
-
-export interface MovieInfo {
+  commentsCount: number;
   actors: string[];
   ageRating: number;
   alternateTitle: string;
   description: string;
   director: string;
-  genre: string[];
+  genres: string[];
   poster: string;
   releaseDate: Date;
-  country: string;
+  countries: string[];
   runtime: number;
   title: string;
   rating: number;
   writers: string[];
+  userDetails: UserDetails;
 }
 
 export interface UserDetails {
-  isInWatched: boolean;
+  isWatched: boolean;
   watchingDate: Date | null;
-  isInFavorite: boolean;
+  isFavorite: boolean;
   isInWatchlist: boolean;
 }
 
 export interface UserDetailsToUpdate {
-  isInWatched: boolean;
-  isInFavorite: boolean;
+  isWatched: boolean;
+  isFavorite: boolean;
   isInWatchlist: boolean;
 }
 
 export interface Comment {
   id: number;
-  author: string;
-  comment: string;
-  date: Date;
+  user: User;
+  message: string;
+  creationDate: Date;
   emotion: string;
 }
 
 export interface CommentPure {
-  comment: string;
-  date: string;
+  message: string;
   emotion: string;
 }
 
-export interface CommentBackend {
-  id: string;
-  author: string;
-  comment: string;
-  date: string;
-  emotion: string;
+export interface User {
+  id: number;
+  name: string;
 }
+
+export interface AuthData {
+  login: string;
+  password: string;
+}
+
+export interface RegistrationData extends AuthData {
+  name: string;
+  email: string;
+}
+
+export type ValueOf<T> = T[keyof T];

@@ -1,18 +1,18 @@
 import React from "react";
-import FilmCard from "../film-card/film-card";
-import ShowMoreButton from "../show-more-button/show-more-button";
+import { FilmCard } from "./components/film-card/film-card";
+import { ShowMoreButton } from "./components/show-more-button";
 import { Movie } from "../../types";
-import { useMovies } from "../../redux/data/hooks/selectors";
-import { useShowMoreMovies } from "../../redux/data/hooks/useShowMoreMovies";
+import { useMovies } from "../../store/movie/hooks/selectors";
+import { useShowMoreMovies } from "../../store/movie/hooks/useShowMoreMovies";
 import { getFilterItemCount } from "../../utils/filter";
-import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
+import { useCurrentFilterType } from "../../store/app/hooks/selectors";
 
 interface Props {
   movies: Movie[];
   title?: string;
 }
 
-const FilmsList: React.FC<Props> = ({ movies, title }): JSX.Element => {
+export const FilmsList: React.FC<Props> = ({ movies, title }): JSX.Element => {
   const allMovies = useMovies();
   const getMoviesCountByFilter = getFilterItemCount(allMovies);
   const showMoreMovies = useShowMoreMovies();
@@ -24,16 +24,12 @@ const FilmsList: React.FC<Props> = ({ movies, title }): JSX.Element => {
       </h2>
       <div className="films-list__container">
         {movies.map((movie) => (
-          <FilmCard key={movie.id + movie.filmInfo.title} movie={movie} />
+          <FilmCard key={movie.id + movie.title} movie={movie} />
         ))}
       </div>
-      {movies.length < getMoviesCountByFilter(currentFilterType) && !title ? (
+      {movies.length < getMoviesCountByFilter(currentFilterType) && !title && (
         <ShowMoreButton onShowMoreButtonClick={showMoreMovies} />
-      ) : (
-        ``
       )}
     </section>
   );
 };
-
-export default FilmsList;

@@ -1,7 +1,7 @@
 import React from "react";
-import { useMovies } from "../../redux/data/hooks/selectors";
+import { useMovies } from "../../store/movie/hooks/selectors";
 
-const Footer: React.FC = (): JSX.Element => {
+export const Footer: React.FC = (): JSX.Element => {
   const movies = useMovies();
   return (
     <footer className="footer">
@@ -12,5 +12,3 @@ const Footer: React.FC = (): JSX.Element => {
     </footer>
   );
 };
-
-export default Footer;

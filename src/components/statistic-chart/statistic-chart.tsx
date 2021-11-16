@@ -7,7 +7,7 @@ interface Props {
   genresByFrequency: [string, number][];
 }
 
-const StatisticChart: React.FC<Props> = ({
+export const StatisticChart: React.FC<Props> = ({
   genresByFrequency,
 }): JSX.Element => {
   const prevGenresLength = usePrevious(genresByFrequency.length);
@@ -32,5 +32,3 @@ const StatisticChart: React.FC<Props> = ({
     </div>
   );
 };
-
-export default StatisticChart;

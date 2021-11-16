@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useCurrentMovie } from "../../redux/data/hooks/selectors";
-import { useUpdateUserDetailsHandler } from "../../hooks/useUpdateUserDetailsHandler";
-import FilmDetailsInfo from "../../components/film-details-info/film-details-info";
-import FilmDetailsControls from "../../components/film-details-controls/film-details-controls";
-import { useLoadMovieComments } from "../../redux/data/hooks/useLoadMovieComments";
-import FilmDetailsComments from "../../components/film-details-comments/film-details-comments";
-import FilmDetailsCommentForm from "../../components/film-details-comment-form/film-details-comment-form";
+import { useMovie } from "../../store/movie/hooks/selectors";
+import { FilmDetailsInfo } from "./components/film-details-info";
+import { FilmDetailsControls } from "./components/film-details-controls";
+import { useLoadMovieComments } from "../../store/comment/hooks/useLoadMovieComments";
+import { FilmDetailsComments } from "./components/film-details-comments";
+import { FilmDetailsCommentForm } from "./components/film-details-comment-form";
+import { useLoadMovie } from "../../store/movie/hooks/useLoadMovie";
+import { useAuthorizationStatus } from "../../store/auth/hooks/selectors";
+import { LoadingSpinner } from "../../components/loading-spinner/loading-spinner";
 
 interface MatchParams {
   id: string;
@@ -14,34 +16,31 @@ interface MatchParams {
 
 type Props = RouteComponentProps<MatchParams>;
 
-const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
+export const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
   const movieId = Number(match.params.id);
-  const movie = useCurrentMovie(movieId);
-  const updateUserDetailsHandler = useUpdateUserDetailsHandler(movie);
+  const loadCurrentMovie = useLoadMovie();
+  const movie = useMovie();
   const loadMovieComments = useLoadMovieComments();
-
-  const { filmInfo, userDetails } = movie;
+  const isAuth = useAuthorizationStatus();
 
   useEffect(() => {
+    loadCurrentMovie(movieId);
     loadMovieComments(movieId);
-  }, [loadMovieComments, movieId]);
+  }, [loadCurrentMovie, loadMovieComments, movieId]);
 
-  return (
+  return movie.id ? (
     <section className="film-details">
       <div className="form-details__top-container">
-        <FilmDetailsInfo filmInfo={filmInfo} />
-        <FilmDetailsControls
-          userDetails={userDetails}
-          updateUserDetailsHandler={updateUserDetailsHandler}
-        />
+        <FilmDetailsInfo movie={movie} />
+        {isAuth && <FilmDetailsControls movie={movie} />}
       </div>
 
       <div className="form-details__bottom-container">
         <FilmDetailsComments />
-        <FilmDetailsCommentForm movieId={movieId} />
+        {isAuth && <FilmDetailsCommentForm movieId={movie.id} />}
       </div>
     </section>
+  ) : (
+    <LoadingSpinner />
   );
 };
-
-export default FilmDetails;

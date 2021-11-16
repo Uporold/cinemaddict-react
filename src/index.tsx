@@ -5,15 +5,14 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { AxiosInstance } from "axios";
 import { Provider } from "react-redux";
-import reportWebVitals from "./reportWebVitals";
-import App from "./components/app/app";
+import { App } from "./components/app/app";
 import { createAPI } from "./api";
-import { AllReduxActions, GlobalState, rootReducer } from "./redux/reducer";
-import { Operation as DataOperation } from "./redux/data/data";
+import { AllReduxActions, GlobalState, rootReducer } from "./store/reducer";
+import { Operation } from "./store/auth/auth";
 
 const api = createAPI();
 
-const store = createStore(
+export const store = createStore(
   rootReducer,
   composeWithDevTools(
     applyMiddleware(
@@ -26,16 +25,23 @@ const store = createStore(
   ),
 );
 
-store.dispatch(DataOperation.loadMovies()).then(() => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
-    document.getElementById("root"),
-  );
-});
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401) {
+      store.dispatch(Operation.logout());
+    }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    return Promise.reject(error?.response ?? error);
+  },
+);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root"),
+);

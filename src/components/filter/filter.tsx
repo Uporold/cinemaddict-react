@@ -1,21 +1,22 @@
 import React from "react";
-import { useMovies } from "../../redux/data/hooks/selectors";
+import { useMovies } from "../../store/movie/hooks/selectors";
 import {
   useCurrentFilterType,
   useStatisticStatus,
-} from "../../redux/app/hooks/selectors";
-import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
+} from "../../store/app/hooks/selectors";
+import { useSetFilterType } from "../../store/app/hooks/useSetFilterType";
 import { FilterType } from "../../const";
 import { getFilterItemCount } from "../../utils/filter";
-import { useSetStatisticMode } from "../../redux/app/hooks/useSetStatisticMode";
+import { useAuthorizationStatus } from "../../store/auth/hooks/selectors";
 
-const Filter: React.FC = (): JSX.Element => {
+export const Filter: React.FC = (): JSX.Element => {
   const movies = useMovies();
   const currentFilterType = useCurrentFilterType();
   const setFilterType = useSetFilterType();
 
+  const isAuth = useAuthorizationStatus();
+
   const isStatisticOpen = useStatisticStatus();
-  const closeStatistic = useSetStatisticMode();
 
   const getMoviesCountByFilter = getFilterItemCount(movies);
 
@@ -24,7 +25,6 @@ const Filter: React.FC = (): JSX.Element => {
   ) => {
     evt.preventDefault();
     setFilterType(filterType);
-    closeStatistic(false);
   };
 
   return (
@@ -39,7 +39,8 @@ const Filter: React.FC = (): JSX.Element => {
               ? `main-navigation__item--active`
               : ``
           } ${
-            getMoviesCountByFilter(filterType) === 0
+            getMoviesCountByFilter(filterType) === 0 ||
+            (!isAuth && filterType !== FilterType.ALL)
               ? `main-navigation__item--disabled`
               : ``
           }`}
@@ -47,7 +48,7 @@ const Filter: React.FC = (): JSX.Element => {
           {filterType === FilterType.ALL ? "All movies" : filterType}
           {filterType !== FilterType.ALL ? (
             <span className="main-navigation__item-count">
-              {getMoviesCountByFilter(filterType)}
+              {isAuth ? getMoviesCountByFilter(filterType) : 0}
             </span>
           ) : (
             ""
@@ -57,5 +58,3 @@ const Filter: React.FC = (): JSX.Element => {
     </div>
   );
 };
-
-export default Filter;
