@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Backend
-Source code of backend server (nest.js) available in `will be soon`
+Source code of backend server (nest.js) available in https://github.com/Uporold/cinemaddict-nestjs
 To change API URL go to `src/api.ts` and edit API_URL
 
 ## Functionality
