@@ -29,7 +29,11 @@ export const FilmCardInfo: React.FC<Props> = memo(({ movie, isAuth }) => {
       <img
         src={`./${movie.poster}`}
         alt=""
-        className={isAuth ? "film-card__poster" : "film-card__poster--no-hover"}
+        className={
+          isAuth && movie.userDetails
+            ? "film-card__poster"
+            : "film-card__poster--no-hover"
+        }
       />
       <p className="film-card__description">{slicedDescription}</p>
     </>

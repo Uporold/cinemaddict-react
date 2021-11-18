@@ -21,7 +21,7 @@ export const FilmCard: React.FC<Props> = memo(
           <Link to={PagePath.MOVIE(id)} className="film-card__comments">
             {commentsCount} comments
           </Link>
-          {isAuth && <FilmCardControls movie={movie} />}
+          {isAuth && movie.userDetails && <FilmCardControls movie={movie} />}
         </div>
       </article>
     );

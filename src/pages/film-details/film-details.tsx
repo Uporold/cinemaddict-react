@@ -32,7 +32,7 @@ export const FilmDetails: React.FC<Props> = ({ match }): JSX.Element => {
     <section className="film-details">
       <div className="form-details__top-container">
         <FilmDetailsInfo movie={movie} />
-        {isAuth && <FilmDetailsControls movie={movie} />}
+        {isAuth && movie.userDetails && <FilmDetailsControls movie={movie} />}
       </div>
 
       <div className="form-details__bottom-container">
