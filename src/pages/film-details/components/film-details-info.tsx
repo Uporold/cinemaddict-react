@@ -61,16 +61,16 @@ export const FilmDetailsInfo: React.FC<Props> = ({ movie }): JSX.Element => {
               </tr>
               <tr className="film-details__row">
                 <td className="film-details__term">
-                  {movie.writers.length > 1 ? `Writers` : `Writer`}
+                  {movie.writers?.length > 1 ? `Writers` : `Writer`}
                 </td>
                 <td className="film-details__cell">
-                  {movie.writers.join(`, `)}
+                  {movie.writers?.join(`, `)}
                 </td>
               </tr>
               <tr className="film-details__row">
                 <td className="film-details__term">Actors</td>
                 <td className="film-details__cell">
-                  {movie.actors.join(`, `)}
+                  {movie.actors?.join(`, `)}
                 </td>
               </tr>
               <tr className="film-details__row">
@@ -89,18 +89,18 @@ export const FilmDetailsInfo: React.FC<Props> = ({ movie }): JSX.Element => {
               </tr>
               <tr className="film-details__row">
                 <td className="film-details__term">
-                  {movie.countries.length > 1 ? "Countries" : "Country"}
+                  {movie.countries?.length > 1 ? "Countries" : "Country"}
                 </td>
                 <td className="film-details__cell">
-                  {movie.countries.join(`, `)}
+                  {movie.countries?.join(`, `)}
                 </td>
               </tr>
               <tr className="film-details__row">
                 <td className="film-details__term">
-                  {movie.genres.length > 1 ? `Genres` : `Genre`}
+                  {movie.genres?.length > 1 ? `Genres` : `Genre`}
                 </td>
                 <td className="film-details__cell">
-                  {movie.genres.map((item) => (
+                  {movie.genres?.map((item) => (
                     <span key={item} className="film-details__genre">
                       {item}
                     </span>
