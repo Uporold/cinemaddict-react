@@ -95,7 +95,7 @@ export const Operation = {
       dispatch(
         ActionCreator.setFormError(
           true,
-          [e.response?.data?.message] || ["Something went wrong, try again"],
+          e.data?.message || "Something went wrong, try again",
         ),
       );
     }
@@ -120,7 +120,7 @@ export const Operation = {
       dispatch(
         ActionCreator.setFormError(
           true,
-          e.response?.data?.message || ["Something went wrong, try again"],
+          e.data?.message || "Something went wrong, try again",
         ),
       );
     }
