@@ -1,0 +1,11 @@
+.dockerignore
+node_modules
+Dockerfile
+.git
+.gitignore
+build
+.prettierrc
+.eslintrc
+.editorconfig
+.idea
+README.md

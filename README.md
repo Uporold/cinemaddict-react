@@ -8,6 +8,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - `npm start` to start local server
 - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+## Run with docker 
+- `docker build -f Dockerfile -t cinemaddict-react:prod .` to create image
+- `docker run -it --rm -p 3000:80 cinemaddict-react:prod` to run container
+
 ## Backend
 Source code of backend server (nest.js) available in https://github.com/Uporold/cinemaddict-nestjs
 To change API URL go to `src/api.ts` and edit API_URL
