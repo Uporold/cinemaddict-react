@@ -79,8 +79,6 @@ export const ActionCreator = {
 export const Operation = {
   login: (authData: AuthData): ThunkActionType => async (
     dispatch,
-    getState,
-    api,
   ): Promise<void> => {
     dispatch(ActionCreator.setFormError(false, []));
     try {
@@ -103,8 +101,6 @@ export const Operation = {
 
   register: (authData: RegistrationData): ThunkActionType => async (
     dispatch,
-    getState,
-    api,
   ): Promise<void> => {
     dispatch(ActionCreator.resetErrors());
     try {

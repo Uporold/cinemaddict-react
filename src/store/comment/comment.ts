@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { Comment, CommentPure, Movie } from "../../types";
 import {
   AllReduxActions,
@@ -6,6 +5,7 @@ import {
   InferActionsTypes,
 } from "../reducer";
 import { ActionCreator as DataActionCreator } from "../movie/movie";
+import { CommentsService } from "../../services/comments-service/comments-service";
 
 export const initialState = {
   comments: [] as Comment[],
@@ -72,35 +72,19 @@ export const ActionCreator = {
 };
 
 export const Operation = {
-  loadMovieComments: (movieId: number): ThunkActionType => async (
-    dispatch,
-    getState,
-    api,
-  ) => {
-    const response: AxiosResponse<Comment[]> = await api.get(
-      `comments/${movieId}`,
-    );
-    const loadedComments = response.data;
+  loadMovieComments: (movieId: number): ThunkActionType => async (dispatch) => {
+    const loadedComments = await CommentsService.loadMovieComments(movieId);
     dispatch(ActionCreator.loadMovieComments(loadedComments));
   },
 
   sendComment: (
     movieId: number,
     comment: CommentPure,
-  ): ThunkActionTypeAll => async (dispatch, getState, api) => {
+  ): ThunkActionTypeAll => async (dispatch) => {
     dispatch(ActionCreator.setFormBlockStatus(true));
     try {
-      const response: AxiosResponse<Comment> = await api.post(
-        `comments/${movieId}`,
-        {
-          message: comment.message,
-          emotion: comment.emotion,
-        },
-      );
-      if (response.status === 200) {
-        dispatch(ActionCreator.setFormBlockStatus(false));
-      }
-      dispatch(ActionCreator.sendComment(response.data));
+      const newComment = await CommentsService.sendComment(movieId, comment);
+      dispatch(ActionCreator.sendComment(newComment));
       dispatch(DataActionCreator.increaseCommentsCount(movieId));
     } catch (err) {
       dispatch(ActionCreator.setFormErrorStatus(true));
@@ -112,12 +96,8 @@ export const Operation = {
     }
   },
 
-  deleteComment: (commentId: number): ThunkActionType => async (
-    dispatch,
-    getState,
-    api,
-  ) => {
-    await api.delete(`/comments/${commentId}`);
+  deleteComment: (commentId: number): ThunkActionType => async (dispatch) => {
+    await CommentsService.deleteComment(commentId);
     dispatch(ActionCreator.deleteComment(commentId));
   },
 };

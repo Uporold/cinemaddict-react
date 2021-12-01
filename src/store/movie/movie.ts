@@ -1,8 +1,8 @@
-import { AxiosResponse } from "axios";
 import { Comment, Movie, UserDetails, UserDetailsToUpdate } from "../../types";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
 import { API_URL } from "../../api";
 import { movieAdapter } from "../adapter/adapter";
+import { MoviesService } from "../../services/movies-service/movies-service";
 
 const CUT_LENGTH = 5;
 
@@ -89,32 +89,27 @@ export const ActionCreator = {
 };
 
 export const Operation = {
-  loadMovies: (): ThunkActionType => async (dispatch, getState, api) => {
+  loadMovies: (): ThunkActionType => async (dispatch) => {
     dispatch(ActionCreator.setMoviesLoadingStatus(true));
-    const response: AxiosResponse<Movie[]> = await api.get("/movies");
-    const loadedMovies = response.data.map((movie) => movieAdapter(movie));
+    const loadedMovies = await MoviesService.loadMovies();
     dispatch(ActionCreator.loadMovies(loadedMovies));
     dispatch(ActionCreator.setMoviesLoadingStatus(false));
   },
 
-  loadMovie: (movieId: number): ThunkActionType => async (
-    dispatch,
-    getState,
-    api,
-  ) => {
-    const response: AxiosResponse<Movie> = await api.get(`/movies/${movieId}`);
-    dispatch(ActionCreator.loadMovie(movieAdapter(response.data)));
+  loadMovie: (movieId: number): ThunkActionType => async (dispatch) => {
+    const movie = await MoviesService.loadMovie(movieId);
+    dispatch(ActionCreator.loadMovie(movieAdapter(movie)));
   },
 
   updateUserDetails: (
     movieId: number,
     userDetails: UserDetailsToUpdate,
-  ): ThunkActionType => async (dispatch, getState, api) => {
-    const response: AxiosResponse<UserDetails> = await api.patch(
-      `/movies/${movieId}/status`,
+  ): ThunkActionType => async (dispatch) => {
+    const updatedUserDetails = await MoviesService.updateUserDetails(
+      movieId,
       userDetails,
     );
-    dispatch(ActionCreator.updateUserDetails(movieId, response.data));
+    dispatch(ActionCreator.updateUserDetails(movieId, updatedUserDetails));
   },
 };
 

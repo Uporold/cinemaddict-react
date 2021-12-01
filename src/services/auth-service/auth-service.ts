@@ -1,13 +1,6 @@
-import { AxiosInstance } from "axios";
-import { createAPI } from "../../api";
+import { Service } from "../service";
 
-export class AuthService {
-  private static api: AxiosInstance;
-
-  static initialize() {
-    this.api = createAPI();
-  }
-
+export class AuthService extends Service {
   static async auth(login: string, password: string) {
     const response = await this.api.post(`auth/login`, {
       login,
@@ -38,4 +31,4 @@ export class AuthService {
   }
 }
 
-AuthService.initialize();
+// AuthService.initialize();

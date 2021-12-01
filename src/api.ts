@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import history from "./history";
+import { Operation } from "./store/auth/auth";
+import { store } from "./index";
 
 export const API_URL = `http://localhost:4000/`;
 
@@ -26,6 +28,9 @@ export const createAPI = (): AxiosInstance => {
       const status = error?.response?.status;
       if (status === 404) {
         history.push("/error");
+      }
+      if (status === 401) {
+        store.dispatch(Operation.logout());
       }
 
       return Promise.reject(error?.response ?? error);
