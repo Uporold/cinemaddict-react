@@ -1,7 +1,6 @@
 import { Comment, Movie, UserDetails, UserDetailsToUpdate } from "../../types";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
 import { API_URL } from "../../api";
-import { movieAdapter } from "../adapter/adapter";
 import { MoviesService } from "../../services/movies-service/movies-service";
 
 const CUT_LENGTH = 5;
@@ -20,7 +19,6 @@ const ActionType = {
   LOAD_MOVIES: `LOAD_MOVIES`,
   LOAD_MOVIE: `LOAD_MOVIE`,
   LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
-  ADD_MOVIE_COMMENT: `ADD_MOVIE_COMMENT`,
   SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
   SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
   UPDATE_USER_DETAILS: `UPDATE_USER_DETAILS`,
@@ -52,12 +50,10 @@ export const ActionCreator = {
 
   showMoreMovies: () => ({
     type: ActionType.SHOW_MORE_MOVIES,
-    payload: CUT_LENGTH,
   }),
 
   setDefaultMoviesCount: () => ({
     type: ActionType.SET_DEFAULT_MOVIES_COUNT,
-    payload: CUT_LENGTH,
   }),
 
   updateUserDetails: (movieId: number, userDetails: UserDetails) => {
@@ -65,13 +61,6 @@ export const ActionCreator = {
       type: ActionType.UPDATE_USER_DETAILS,
       payload: userDetails,
       movieId,
-    };
-  },
-
-  increaseCommentsCount: (movieId: number) => {
-    return {
-      type: ActionType.ADD_MOVIE_COMMENT,
-      payload: movieId,
     };
   },
 
@@ -98,7 +87,7 @@ export const Operation = {
 
   loadMovie: (movieId: number): ThunkActionType => async (dispatch) => {
     const movie = await MoviesService.loadMovie(movieId);
-    dispatch(ActionCreator.loadMovie(movieAdapter(movie)));
+    dispatch(ActionCreator.loadMovie(movie));
   },
 
   updateUserDetails: (
@@ -125,10 +114,10 @@ export const reducer = (
     case ActionType.SHOW_MORE_MOVIES:
       return {
         ...state,
-        showedMoviesCount: state.showedMoviesCount + action.payload,
+        showedMoviesCount: state.showedMoviesCount + CUT_LENGTH,
       };
     case ActionType.SET_DEFAULT_MOVIES_COUNT:
-      return { ...state, showedMoviesCount: action.payload };
+      return { ...state, showedMoviesCount: CUT_LENGTH };
     case ActionType.UPDATE_USER_DETAILS:
       return {
         ...state,

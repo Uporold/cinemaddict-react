@@ -63,9 +63,7 @@ export const reducer = (
       return {
         ...state,
         isStatisticMode: action.payload,
-        currentSortType: action.payload
-          ? SortType.DEFAULT
-          : state.currentSortType,
+        currentSortType: SortType.DEFAULT,
       };
     case ActionType.RESET_APP_STATE:
       return { ...initialState };

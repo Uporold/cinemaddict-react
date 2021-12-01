@@ -4,7 +4,6 @@ import {
   BaseThunkActionType,
   InferActionsTypes,
 } from "../reducer";
-import { ActionCreator as DataActionCreator } from "../movie/movie";
 import { CommentsService } from "../../services/comments-service/comments-service";
 
 export const initialState = {
@@ -85,7 +84,6 @@ export const Operation = {
     try {
       const newComment = await CommentsService.sendComment(movieId, comment);
       dispatch(ActionCreator.sendComment(newComment));
-      dispatch(DataActionCreator.increaseCommentsCount(movieId));
     } catch (err) {
       dispatch(ActionCreator.setFormErrorStatus(true));
       setTimeout(() => {
