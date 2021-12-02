@@ -13,7 +13,7 @@ type AppActionTypes = ReturnType<InferActionsTypes<typeof ActionCreator>>;
 const ActionType = {
   SET_FILTER_TYPE: `SET_FILTER_TYPE`,
   SET_SORT_TYPE: `SET_SORT_TYPE`,
-  SET_STATISTIC_MODE: `SET_STATISTIC_MODE`,
+  OPEN_STATISTIC: `OPEN_STATISTIC`,
   RESET_APP_STATE: `RESET_APP_STATE`,
 } as const;
 
@@ -32,10 +32,9 @@ export const ActionCreator = {
     };
   },
 
-  setStatisticsMode: (status: boolean) => {
+  openStatistic: () => {
     return {
-      type: ActionType.SET_STATISTIC_MODE,
-      payload: status,
+      type: ActionType.OPEN_STATISTIC,
     };
   },
 
@@ -59,10 +58,10 @@ export const reducer = (
       };
     case ActionType.SET_SORT_TYPE:
       return { ...state, currentSortType: action.payload };
-    case ActionType.SET_STATISTIC_MODE:
+    case ActionType.OPEN_STATISTIC:
       return {
         ...state,
-        isStatisticMode: action.payload,
+        isStatisticMode: true,
         currentSortType: SortType.DEFAULT,
       };
     case ActionType.RESET_APP_STATE:

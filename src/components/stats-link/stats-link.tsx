@@ -20,9 +20,7 @@ export const StatsLink: React.FC = (): JSX.Element => {
       className={`main-navigation__additional  ${
         isStatisticOpen ? `main-navigation__item--active` : ``
       }`}
-      onClick={() => {
-        openStatistic(true);
-      }}
+      onClick={openStatistic}
     >
       Stats
     </a>
