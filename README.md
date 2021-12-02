@@ -2,6 +2,11 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Branches
+
+- Master branch with classic redux [link](https://github.com/Uporold/cinemaddict-react/tree/master)
+- Redux-toolkit branch [link](https://github.com/Uporold/cinemaddict-react/tree/redux-toolkit)
+
 ## How to run locally
 - Clone this repo
 - `npm i` to install all required dependencies
