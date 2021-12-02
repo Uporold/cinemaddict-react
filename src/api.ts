@@ -1,9 +1,15 @@
 import axios, { AxiosInstance } from "axios";
 import history from "./history";
 import { Operation } from "./store/auth/auth";
-import { store } from "./index";
+import { AppStore } from "./store/reducer";
 
 export const API_URL = `http://localhost:4000/`;
+
+let store: AppStore;
+
+export const injectStore = (_store: AppStore) => {
+  store = _store;
+};
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({

@@ -1,41 +1,20 @@
-import { Action, combineReducers } from "redux";
-import { AxiosInstance } from "axios";
-import { ThunkAction } from "redux-thunk";
-import { reducer as movie, ActionCreator as DataActions } from "./movie/movie";
-import { reducer as app, ActionCreator as AppActions } from "./app/app";
-import {
-  reducer as comment,
-  ActionCreator as CommentActions,
-} from "./comment/comment";
-import { reducer as auth, ActionCreator as AuthActions } from "./auth/auth";
+import { AnyAction, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import appReducer from "./app/app";
+import movieReducer from "./movie/movie";
+import commentReducer from "./comment/comment";
+import authReducer from "./auth/auth";
 
-export const rootReducer = combineReducers({
-  MOVIE: movie,
-  APP: app,
-  AUTH: auth,
-  COMMENT: comment,
+export const store = configureStore({
+  reducer: {
+    MOVIE: movieReducer,
+    APP: appReducer,
+    AUTH: authReducer,
+    COMMENT: commentReducer,
+  },
 });
 
-export type GlobalState = ReturnType<typeof rootReducer>;
+export type GlobalState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export type AppStore = typeof store;
 
-const combinedActions = {
-  ...DataActions,
-  ...AppActions,
-  ...CommentActions,
-  ...AuthActions,
-};
-
-export type AllReduxActions = ReturnType<
-  InferActionsTypes<typeof combinedActions>
->;
-
-export type InferActionsTypes<T> = T extends { [key: string]: infer U }
-  ? U
-  : never;
-
-export type BaseThunkActionType<A extends Action = Action> = ThunkAction<
-  Promise<void>,
-  GlobalState,
-  AxiosInstance,
-  A
->;
+export type AppThunk = ThunkAction<void, GlobalState, unknown, AnyAction>;
