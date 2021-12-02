@@ -2,13 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Branches
+
+- Master branch with classic redux [link](https://github.com/Uporold/cinemaddict-react/tree/master)
+- Redux-toolkit branch [link](https://github.com/Uporold/cinemaddict-react/tree/redux-toolkit)
+
 ## How to run locally
 - Clone this repo
 - `npm i` to install all required dependencies
 - `npm start` to start local server
 - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Run with docker 
+## Run with docker
 - `docker build -f Dockerfile -t cinemaddict-react:prod .` to create image
 - `docker run -it --rm -p 3000:80 cinemaddict-react:prod` to run container
 
