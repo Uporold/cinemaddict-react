@@ -20,12 +20,11 @@ export const Filter: React.FC = (): JSX.Element => {
 
   const getMoviesCountByFilter = getFilterItemCount(movies);
 
-  const onFilterItemClickHandler = (filterType: string) => (
-    evt: React.MouseEvent,
-  ) => {
-    evt.preventDefault();
-    setFilterType(filterType);
-  };
+  const onFilterItemClickHandler =
+    (filterType: string) => (evt: React.MouseEvent) => {
+      evt.preventDefault();
+      setFilterType(filterType);
+    };
 
   return (
     <div className="main-navigation__items">

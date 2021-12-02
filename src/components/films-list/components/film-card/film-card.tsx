@@ -10,20 +10,18 @@ interface Props {
   movie: Movie;
 }
 
-export const FilmCard: React.FC<Props> = memo(
-  ({ movie }): JSX.Element => {
-    const { id, commentsCount } = movie;
-    const isAuth = useAuthorizationStatus();
-    return (
-      <article className="film-card">
-        <FilmCardInfo movie={movie} isAuth={isAuth} />
-        <div className="film-card__bottom-container">
-          <Link to={PagePath.MOVIE(id)} className="film-card__comments">
-            {commentsCount} comments
-          </Link>
-          {isAuth && movie.userDetails && <FilmCardControls movie={movie} />}
-        </div>
-      </article>
-    );
-  },
-);
+export const FilmCard: React.FC<Props> = memo(({ movie }): JSX.Element => {
+  const { id, commentsCount } = movie;
+  const isAuth = useAuthorizationStatus();
+  return (
+    <article className="film-card">
+      <FilmCardInfo movie={movie} isAuth={isAuth} />
+      <div className="film-card__bottom-container">
+        <Link to={PagePath.MOVIE(id)} className="film-card__comments">
+          {commentsCount} comments
+        </Link>
+        {isAuth && movie.userDetails && <FilmCardControls movie={movie} />}
+      </div>
+    </article>
+  );
+});

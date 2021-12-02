@@ -13,9 +13,9 @@ export const FilmsSection: React.FC = (): JSX.Element => {
 
   return (
     <section className="films">
-      <FilmsList movies={showedMovies} />
-      <FilmsList movies={topRatedMovies} title="Top rated" />
-      <FilmsList movies={mostCommentedMovies} title="Most commented" />
+      <FilmsList movies={showedMovies} title="All movies. Upcoming" />
+      <FilmsList movies={topRatedMovies} title="Top rated" isExtra />
+      <FilmsList movies={mostCommentedMovies} title="Most commented" isExtra />
     </section>
   );
 };

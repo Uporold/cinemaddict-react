@@ -85,21 +85,22 @@ export const Operation = {
     dispatch(ActionCreator.setMoviesLoadingStatus(false));
   },
 
-  loadMovie: (movieId: number): ThunkActionType => async (dispatch) => {
-    const movie = await MoviesService.loadMovie(movieId);
-    dispatch(ActionCreator.loadMovie(movie));
-  },
+  loadMovie:
+    (movieId: number): ThunkActionType =>
+    async (dispatch) => {
+      const movie = await MoviesService.loadMovie(movieId);
+      dispatch(ActionCreator.loadMovie(movie));
+    },
 
-  updateUserDetails: (
-    movieId: number,
-    userDetails: UserDetailsToUpdate,
-  ): ThunkActionType => async (dispatch) => {
-    const updatedUserDetails = await MoviesService.updateUserDetails(
-      movieId,
-      userDetails,
-    );
-    dispatch(ActionCreator.updateUserDetails(movieId, updatedUserDetails));
-  },
+  updateUserDetails:
+    (movieId: number, userDetails: UserDetailsToUpdate): ThunkActionType =>
+    async (dispatch) => {
+      const updatedUserDetails = await MoviesService.updateUserDetails(
+        movieId,
+        userDetails,
+      );
+      dispatch(ActionCreator.updateUserDetails(movieId, updatedUserDetails));
+    },
 };
 
 export const reducer = (

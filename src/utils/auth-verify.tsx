@@ -14,7 +14,7 @@ interface Props extends RouteComponentProps {
 }
 
 const AuthVerify: React.FC<Props> = (props) => {
-  const { history } = props;
+  const { history, logout } = props;
   history.listen(() => {
     const user = JSON.parse(localStorage.getItem("user") as string);
 
@@ -22,7 +22,7 @@ const AuthVerify: React.FC<Props> = (props) => {
       const decodedJwt = parseJwt(user.token);
 
       if (decodedJwt.exp * 1000 < Date.now()) {
-        props.logout();
+        logout();
       }
     }
   });

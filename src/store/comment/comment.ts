@@ -71,33 +71,36 @@ export const ActionCreator = {
 };
 
 export const Operation = {
-  loadMovieComments: (movieId: number): ThunkActionType => async (dispatch) => {
-    const loadedComments = await CommentsService.loadMovieComments(movieId);
-    dispatch(ActionCreator.loadMovieComments(loadedComments));
-  },
+  loadMovieComments:
+    (movieId: number): ThunkActionType =>
+    async (dispatch) => {
+      const loadedComments = await CommentsService.loadMovieComments(movieId);
+      dispatch(ActionCreator.loadMovieComments(loadedComments));
+    },
 
-  sendComment: (
-    movieId: number,
-    comment: CommentPure,
-  ): ThunkActionTypeAll => async (dispatch) => {
-    dispatch(ActionCreator.setFormBlockStatus(true));
-    try {
-      const newComment = await CommentsService.sendComment(movieId, comment);
-      dispatch(ActionCreator.sendComment(newComment));
-    } catch (err) {
-      dispatch(ActionCreator.setFormErrorStatus(true));
-      setTimeout(() => {
-        dispatch(ActionCreator.setFormErrorStatus(false));
-      }, 600);
-    } finally {
-      dispatch(ActionCreator.setFormBlockStatus(false));
-    }
-  },
+  sendComment:
+    (movieId: number, comment: CommentPure): ThunkActionTypeAll =>
+    async (dispatch) => {
+      dispatch(ActionCreator.setFormBlockStatus(true));
+      try {
+        const newComment = await CommentsService.sendComment(movieId, comment);
+        dispatch(ActionCreator.sendComment(newComment));
+      } catch (err) {
+        dispatch(ActionCreator.setFormErrorStatus(true));
+        setTimeout(() => {
+          dispatch(ActionCreator.setFormErrorStatus(false));
+        }, 600);
+      } finally {
+        dispatch(ActionCreator.setFormBlockStatus(false));
+      }
+    },
 
-  deleteComment: (commentId: number): ThunkActionType => async (dispatch) => {
-    await CommentsService.deleteComment(commentId);
-    dispatch(ActionCreator.deleteComment(commentId));
-  },
+  deleteComment:
+    (commentId: number): ThunkActionType =>
+    async (dispatch) => {
+      await CommentsService.deleteComment(commentId);
+      dispatch(ActionCreator.deleteComment(commentId));
+    },
 };
 
 export const reducer = (

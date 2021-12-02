@@ -7,6 +7,10 @@ interface Props {
   type?: string;
 }
 
+const defaultProps = {
+  type: "text",
+};
+
 export const InputField = React.forwardRef<HTMLInputElement, Props>(
   (props, ref): JSX.Element => {
     return (
@@ -18,7 +22,7 @@ export const InputField = React.forwardRef<HTMLInputElement, Props>(
           id={props.name}
           ref={ref}
           required={props.required}
-          type={props.type || "text"}
+          type={props.type}
         />
         <label className="sign-in__label visually-hidden" htmlFor={props.name}>
           {props.placeholder}
@@ -27,3 +31,5 @@ export const InputField = React.forwardRef<HTMLInputElement, Props>(
     );
   },
 );
+
+InputField.defaultProps = defaultProps;

@@ -32,8 +32,9 @@ export const getSlicedDescription = (
 };
 
 export const getUserRank = (movies: Movie[]): string => {
-  const watchedMovies = movies.filter((movie) => movie.userDetails?.isWatched)
-    .length;
+  const watchedMovies = movies.filter(
+    (movie) => movie.userDetails?.isWatched,
+  ).length;
   switch (true) {
     case watchedMovies >= UserRank.NOVICE.minMovies &&
       watchedMovies < UserRank.FUN.minMovies:

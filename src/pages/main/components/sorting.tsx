@@ -7,12 +7,11 @@ export const Sorting: React.FC = (): JSX.Element => {
   const currentSortType = useCurrentSortType();
   const setSortType = useSetSortType();
 
-  const onFilterItemClickHandler = (sortType: string) => (
-    evt: React.MouseEvent,
-  ) => {
-    evt.preventDefault();
-    setSortType(sortType);
-  };
+  const onFilterItemClickHandler =
+    (sortType: string) => (evt: React.MouseEvent) => {
+      evt.preventDefault();
+      setSortType(sortType);
+    };
   return (
     <ul className="sort">
       {Object.values(SortType).map((sortType) => (
