@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createModel } from "@rematch/core";
 import { Comment, CommentPure } from "../../types";
-import { AppThunk } from "../reducer";
 import { CommentsService } from "../../services/comments-service/comments-service";
+import { RootModel } from "../reducer";
 
 export const initialState = {
   comments: [] as Comment[],
@@ -9,61 +9,50 @@ export const initialState = {
   isFormError: false,
 };
 
-export const commentSlice = createSlice({
-  name: "comment",
-  initialState,
+export const comments = createModel<RootModel>()({
+  state: initialState,
   reducers: {
-    loadMovieComments(state, action) {
-      state.comments = action.payload;
+    SET_COMMENTS(state, payload: Comment[]) {
+      state.comments = payload;
     },
-    sendComment(state, action) {
-      state.comments = [...state.comments, action.payload];
+    ADD_COMMENT(state, payload: Comment) {
+      state.comments = [...state.comments, payload];
     },
-    setFormBlockStatus(state, action) {
-      state.isFormBlocked = action.payload;
+    SET_FORM_BLOCK_STATUS(state, payload: boolean) {
+      state.isFormBlocked = payload;
     },
-    setFormErrorStatus(state, action) {
-      state.isFormError = action.payload;
+    SET_FORM_ERROR_STATUS(state, payload: boolean) {
+      state.isFormError = payload;
     },
-    deleteComment(state, action) {
+    DELETE_COMMENT(state, payload: number) {
       state.comments = state.comments.filter(
-        (comment) => comment.id !== action.payload,
+        (comment) => comment.id !== payload,
       );
     },
   },
-});
-
-export const Operation = {
-  loadMovieComments:
-    (movieId: number): AppThunk =>
-    async (dispatch) => {
+  effects: (dispatch) => ({
+    async loadMovieComments(movieId: number) {
       const loadedComments = await CommentsService.loadMovieComments(movieId);
-      dispatch(commentSlice.actions.loadMovieComments(loadedComments));
+      dispatch.comments.SET_COMMENTS(loadedComments);
     },
-
-  sendComment:
-    (movieId: number, comment: CommentPure): AppThunk =>
-    async (dispatch) => {
-      dispatch(commentSlice.actions.setFormBlockStatus(true));
+    async sendComment(payload: { movieId: number; comment: CommentPure }) {
+      dispatch.comments.SET_FORM_BLOCK_STATUS(true);
       try {
+        const { movieId, comment } = payload;
         const newComment = await CommentsService.sendComment(movieId, comment);
-        dispatch(commentSlice.actions.sendComment(newComment));
+        dispatch.comments.ADD_COMMENT(newComment);
       } catch (err) {
-        dispatch(commentSlice.actions.setFormErrorStatus(true));
+        dispatch.comments.SET_FORM_ERROR_STATUS(true);
         setTimeout(() => {
-          dispatch(commentSlice.actions.setFormErrorStatus(false));
+          dispatch.comments.SET_FORM_ERROR_STATUS(false);
         }, 600);
       } finally {
-        dispatch(commentSlice.actions.setFormBlockStatus(false));
+        dispatch.comments.SET_FORM_BLOCK_STATUS(false);
       }
     },
-
-  deleteComment:
-    (commentId: number): AppThunk =>
-    async (dispatch) => {
+    async deleteComment(commentId: number) {
       await CommentsService.deleteComment(commentId);
-      dispatch(commentSlice.actions.deleteComment(commentId));
+      dispatch.comments.DELETE_COMMENT(commentId);
     },
-};
-
-export default commentSlice.reducer;
+  }),
+});

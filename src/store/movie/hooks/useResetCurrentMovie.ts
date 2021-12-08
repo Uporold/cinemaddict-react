@@ -1,11 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { resetCurrentMovie } from "../movie";
+import { useStoreDispatch } from "../../reducer";
 
 export const useResetCurrentMovie = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(resetCurrentMovie());
+    dispatch.movies.RESET_CURRENT_MOVIE();
   }, [dispatch]);
 };

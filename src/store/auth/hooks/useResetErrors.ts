@@ -1,11 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { resetErrors } from "../auth";
+import { useStoreDispatch } from "../../reducer";
 
 export const useResetErrors = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(resetErrors());
+    dispatch.auth.RESET_FORM_ERRORS();
   }, [dispatch]);
 };

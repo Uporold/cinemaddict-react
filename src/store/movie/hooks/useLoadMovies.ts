@@ -1,11 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { Operation } from "../movie";
+import { useStoreDispatch } from "../../reducer";
 
 export const useLoadMovies = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(Operation.loadMovies());
+    dispatch.movies.loadMovies();
   }, [dispatch]);
 };

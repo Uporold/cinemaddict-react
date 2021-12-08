@@ -1,9 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createModel } from "@rematch/core";
 import history from "../../history";
 import { AuthService } from "../../services/auth-service/auth-service";
-import { AppThunk } from "../reducer";
+import { RootModel } from "../reducer";
 import { AuthData, RegistrationData } from "../../types";
-import { appSlice } from "../app/app";
 
 const userData = localStorage.getItem("user");
 const user = userData ? JSON.parse(userData) : null;
@@ -15,93 +14,71 @@ export const initialState = {
   errorMessages: [] as string[],
 };
 
-const authSlice = createSlice({
-  name: "auth",
-  initialState,
+export const auth = createModel<RootModel>()({
+  state: initialState,
   reducers: {
-    setAuthorizationStatus(state, action) {
-      state.authorizationStatus = action.payload;
+    SET_AUTH_STATUS(state, payload: boolean) {
+      state.authorizationStatus = payload;
     },
-    finishLogin(state, action) {
-      state.user = action.payload;
+    FINISH_LOGIN(state, payload) {
+      state.user = payload;
     },
-    finishRegistration(state) {
+    FINISH_REGISTRATION(state) {
       return state;
     },
-    logout(state) {
+    LOGOUT(state) {
       state.user = null;
     },
-    setFormError(
-      state,
-      action: PayloadAction<{ status: boolean; messages: string[] }>,
-    ) {
-      state.isFormError = action.payload.status;
-      state.errorMessages = Array.isArray(action.payload.messages)
-        ? [...action.payload.messages]
-        : [action.payload.messages];
+    SET_FORM_ERROR(state, payload: { status: boolean; messages: string[] }) {
+      state.isFormError = payload.status;
+      state.errorMessages = Array.isArray(payload.messages)
+        ? [...payload.messages]
+        : [payload.messages];
     },
-    resetErrors(state) {
+    RESET_FORM_ERRORS(state) {
       state.isFormError = false;
       state.errorMessages = [];
     },
   },
-});
-
-export const Operation = {
-  login:
-    (authData: AuthData): AppThunk =>
-    async (dispatch) => {
-      dispatch(authSlice.actions.setFormError({ status: false, messages: [] }));
+  effects: (dispatch) => ({
+    async login(payload: AuthData) {
       try {
         const response = await AuthService.auth(
-          authData.login,
-          authData.password,
+          payload.login,
+          payload.password,
         );
-        dispatch(authSlice.actions.setAuthorizationStatus(true));
-        dispatch(authSlice.actions.finishLogin(response));
+        dispatch.auth.SET_AUTH_STATUS(true);
+        dispatch.auth.FINISH_LOGIN(response);
         history.push(`/`);
       } catch (e: any) {
-        dispatch(
-          authSlice.actions.setFormError({
-            status: true,
-            messages: e.data?.message || "Something went wrong, try again",
-          }),
-        );
+        dispatch.auth.SET_FORM_ERROR({
+          status: true,
+          messages: e.data?.message || "Something went wrong, try again",
+        });
       }
     },
-
-  register:
-    (authData: RegistrationData): AppThunk =>
-    async (dispatch) => {
-      dispatch(authSlice.actions.resetErrors());
+    async register(payload: RegistrationData) {
       try {
         await AuthService.register(
-          authData.name,
-          authData.login,
-          authData.email,
-          authData.password,
+          payload.name,
+          payload.login,
+          payload.email,
+          payload.password,
         );
-        dispatch(authSlice.actions.finishRegistration());
+        dispatch.auth.FINISH_REGISTRATION();
         history.push(`/login`);
       } catch (e: any) {
-        dispatch(
-          authSlice.actions.setFormError({
-            status: true,
-            messages: e.data?.message || "Something went wrong, try again",
-          }),
-        );
+        dispatch.auth.SET_FORM_ERROR({
+          status: true,
+          messages: e.data?.message || "Something went wrong, try again",
+        });
       }
     },
-
-  logout: (): AppThunk => (dispatch) => {
-    AuthService.logout();
-    dispatch(authSlice.actions.setAuthorizationStatus(false));
-    dispatch(appSlice.actions.resetAppState());
-    dispatch(authSlice.actions.logout());
-  },
-};
-
-export const { setAuthorizationStatus, logout, resetErrors } =
-  authSlice.actions;
-
-export default authSlice.reducer;
+    logout() {
+      AuthService.logout();
+      dispatch.auth.SET_AUTH_STATUS(false);
+      dispatch.app.RESET_APP_STATE();
+      dispatch.auth.LOGOUT();
+    },
+  }),
+});

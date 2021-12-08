@@ -1,20 +1,27 @@
-import { AnyAction, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import appReducer from "./app/app";
-import movieReducer from "./movie/movie";
-import commentReducer from "./comment/comment";
-import authReducer from "./auth/auth";
+import { init, Models, RematchDispatch, RematchRootState } from "@rematch/core";
+import { useDispatch } from "react-redux";
+import immerPlugin from "@rematch/immer";
+import { app } from "./app/app";
+import { movies } from "./movie/movie";
+import { comments } from "./comment/comment";
+import { auth } from "./auth/auth";
 
-export const store = configureStore({
-  reducer: {
-    MOVIE: movieReducer,
-    APP: appReducer,
-    AUTH: authReducer,
-    COMMENT: commentReducer,
-  },
+export interface RootModel extends Models<RootModel> {
+  movies: typeof movies;
+  app: typeof app;
+  auth: typeof auth;
+  comments: typeof comments;
+}
+
+const models: RootModel = { movies, app, auth, comments };
+
+export const store = init<RootModel>({
+  models,
+  plugins: [immerPlugin()],
 });
 
-export type GlobalState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export type AppStore = typeof store;
+export type Store = typeof store;
+export type Dispatch = RematchDispatch<RootModel>;
+export type RootState = RematchRootState<RootModel>;
 
-export type AppThunk = ThunkAction<void, GlobalState, unknown, AnyAction>;
+export const useStoreDispatch = () => useDispatch<Dispatch>();

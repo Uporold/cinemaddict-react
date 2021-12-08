@@ -1,12 +1,11 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { Operation } from "../comment";
+import { useStoreDispatch } from "../../reducer";
 
 export const useDeleteComment = (): ((commentId: number) => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
   return useCallback(
     (commentId) => {
-      dispatch(Operation.deleteComment(commentId));
+      dispatch.comments.deleteComment(commentId);
     },
     [dispatch],
   );

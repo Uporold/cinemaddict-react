@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createModel } from "@rematch/core";
 import { Movie, UserDetails, UserDetailsToUpdate } from "../../types";
-import { AppThunk } from "../reducer";
+import { RootModel } from "../reducer";
 import { API_URL } from "../../api";
 import { MoviesService } from "../../services/movies-service/movies-service";
 
@@ -13,77 +13,64 @@ export const initialState = {
   isMoviesLoading: false,
 };
 
-export const movieSlice = createSlice({
-  name: "movie",
-  initialState,
+export const movies = createModel<RootModel>()({
+  state: initialState,
   reducers: {
-    loadMovies(state, action) {
-      state.movies = action.payload;
+    SET_MOVIES(state, payload: Movie[]) {
+      state.movies = payload;
     },
-    loadCurrentMovie(state, action) {
-      state.currentMovie = action.payload;
+    SET_CURRENT_MOVIE(state, payload: Movie) {
+      state.currentMovie = payload;
     },
-    showMoreMovies(state) {
+    SHOW_MORE_MOVIES(state) {
       state.showedMoviesCount += CUT_LENGTH;
     },
-    setDefaultMoviesCount(state) {
-      state.showedMoviesCount = CUT_LENGTH;
-    },
-    updateUserDetails(
+    UPDATE_USER_DETAILS(
       state,
-      action: PayloadAction<{ movieId: number; userDetails: UserDetails }>,
+      payload: { movieId: number; userDetails: UserDetails },
     ) {
       state.movies = state.movies.map((item) =>
-        item.id === action.payload.movieId
-          ? { ...item, userDetails: action.payload.userDetails }
+        item.id === payload.movieId
+          ? { ...item, userDetails: payload.userDetails }
           : item,
       );
       state.currentMovie =
-        action.payload.movieId === state.currentMovie.id &&
+        payload.movieId === state.currentMovie.id &&
         window.location.href !== API_URL
-          ? { ...state.currentMovie, userDetails: action.payload.userDetails }
+          ? { ...state.currentMovie, userDetails: payload.userDetails }
           : state.currentMovie;
     },
-    setMoviesLoadingStatus(state, action) {
-      state.isMoviesLoading = action.payload;
+    SET_MOVIES_LOADING_STATUS(state, payload: boolean) {
+      state.isMoviesLoading = payload;
     },
-    resetCurrentMovie(state) {
+    RESET_CURRENT_MOVIE(state) {
       state.currentMovie = {} as Movie;
     },
   },
-});
-
-export const Operation = {
-  loadMovies: (): AppThunk => async (dispatch) => {
-    dispatch(movieSlice.actions.setMoviesLoadingStatus(true));
-    const loadedMovies = await MoviesService.loadMovies();
-    dispatch(movieSlice.actions.loadMovies(loadedMovies));
-    dispatch(movieSlice.actions.setMoviesLoadingStatus(false));
-  },
-
-  loadMovie:
-    (movieId: number): AppThunk =>
-    async (dispatch) => {
-      const movie = await MoviesService.loadMovie(movieId);
-      dispatch(movieSlice.actions.loadCurrentMovie(movie));
+  effects: (dispatch) => ({
+    async loadMovies() {
+      dispatch.movies.SET_MOVIES_LOADING_STATUS(true);
+      const loadedMovies = await MoviesService.loadMovies();
+      dispatch.movies.SET_MOVIES(loadedMovies);
+      dispatch.movies.SET_MOVIES_LOADING_STATUS(false);
     },
-
-  updateUserDetails:
-    (movieId: number, userDetails: UserDetailsToUpdate): AppThunk =>
-    async (dispatch) => {
+    async loadMovie(movieId: number) {
+      const movie = await MoviesService.loadMovie(movieId);
+      dispatch.movies.SET_CURRENT_MOVIE(movie);
+    },
+    async updateUserDetails(payload: {
+      movieId: number;
+      userDetails: UserDetailsToUpdate;
+    }) {
+      const { movieId, userDetails } = payload;
       const updatedUserDetails = await MoviesService.updateUserDetails(
         movieId,
         userDetails,
       );
-      dispatch(
-        movieSlice.actions.updateUserDetails({
-          movieId,
-          userDetails: updatedUserDetails,
-        }),
-      );
+      dispatch.movies.UPDATE_USER_DETAILS({
+        movieId,
+        userDetails: updatedUserDetails,
+      });
     },
-};
-
-export const { resetCurrentMovie, showMoreMovies } = movieSlice.actions;
-
-export default movieSlice.reducer;
+  }),
+});

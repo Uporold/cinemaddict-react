@@ -1,11 +1,10 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { resetAppState } from "../app";
+import { useStoreDispatch } from "../../reducer";
 
 export const useResetAppState = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(resetAppState());
+    dispatch.app.RESET_APP_STATE();
   }, [dispatch]);
 };

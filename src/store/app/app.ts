@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createModel } from "@rematch/core";
 import { FilterType, SortType } from "../../const";
+import { RootModel } from "../reducer";
 
 export const initialState = {
   currentFilterType: FilterType.ALL as string,
@@ -7,28 +8,22 @@ export const initialState = {
   isStatisticMode: false,
 };
 
-export const appSlice = createSlice({
-  name: "app",
-  initialState,
+export const app = createModel<RootModel>()({
+  state: initialState,
   reducers: {
-    setFilterType(state, action) {
-      state.currentFilterType = action.payload;
+    SET_FILTER_TYPE(state, payload) {
+      state.currentFilterType = payload;
       state.isStatisticMode = false;
     },
-    setSortType(state, action) {
-      state.currentSortType = action.payload;
+    SET_SORT_TYPE(state, payload) {
+      state.currentSortType = payload;
     },
-    openStatistic(state) {
+    OPEN_STATISTIC(state) {
       state.isStatisticMode = true;
       state.currentSortType = SortType.DEFAULT;
     },
-    resetAppState() {
+    RESET_APP_STATE() {
       return initialState;
     },
   },
 });
-
-export const { setFilterType, setSortType, openStatistic, resetAppState } =
-  appSlice.actions;
-
-export default appSlice.reducer;

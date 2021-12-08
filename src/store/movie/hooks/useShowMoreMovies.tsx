@@ -1,11 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { showMoreMovies } from "../movie";
+import { useStoreDispatch } from "../../reducer";
 
 export const useShowMoreMovies = (): (() => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(showMoreMovies());
+    dispatch.movies.SHOW_MORE_MOVIES();
   }, [dispatch]);
 };
