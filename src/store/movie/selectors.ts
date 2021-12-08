@@ -5,12 +5,13 @@ import { getMoviesByFilter } from "../../utils/filter";
 import { getMoviesBySort } from "../../utils/sorting";
 import { getFilterType, getSortType } from "../app/selectors";
 
-export const getMovies = (state: GlobalState): Movie[] => state.MOVIE.movies;
+export const getMovies = (state: GlobalState): Movie[] => state.movies.movies;
 
-export const getMovie = (state: GlobalState): Movie => state.MOVIE.currentMovie;
+export const getMovie = (state: GlobalState): Movie =>
+  state.movies.currentMovie;
 
 export const getShowedMoviesCount = (state: GlobalState): number =>
-  state.MOVIE.showedMoviesCount;
+  state.movies.showedMoviesCount;
 
 export const getShowedMovies = createSelector(
   getMovies,
@@ -51,4 +52,4 @@ export const getCurrentMovie = (id: number) =>
   );
 
 export const getMoviesLoadingStatus = (state: GlobalState): boolean =>
-  state.MOVIE.isMoviesLoading;
+  state.movies.isMoviesLoading;

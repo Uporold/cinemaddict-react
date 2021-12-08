@@ -2,19 +2,19 @@ import { Action, applyMiddleware, combineReducers, createStore } from "redux";
 import { AxiosInstance } from "axios";
 import thunk, { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { reducer as movie, ActionCreator as DataActions } from "./movie/movie";
+import { reducer as movies, ActionCreator as DataActions } from "./movie/movie";
 import { reducer as app, ActionCreator as AppActions } from "./app/app";
 import {
-  reducer as comment,
+  reducer as comments,
   ActionCreator as CommentActions,
 } from "./comment/comment";
 import { reducer as auth, ActionCreator as AuthActions } from "./auth/auth";
 
 export const rootReducer = combineReducers({
-  MOVIE: movie,
-  APP: app,
-  AUTH: auth,
-  COMMENT: comment,
+  movies,
+  app,
+  auth,
+  comments,
 });
 
 export type GlobalState = ReturnType<typeof rootReducer>;

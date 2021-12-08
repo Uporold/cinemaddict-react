@@ -18,8 +18,8 @@ type ThunkActionType = BaseThunkActionType<CommentActionType>;
 type ThunkActionTypeAll = BaseThunkActionType<AllReduxActions>;
 
 const ActionType = {
-  LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
-  SEND_COMMENT: `SEND_COMMENT`,
+  SET_MOVIE_COMMENTS: `SET_MOVIE_COMMENTS`,
+  ADD_COMMENT: `ADD_COMMENT`,
   UPDATE_MOVIE_COMMENTS: `UPDATE_MOVIE_COMMENTS`,
   DELETE_MOVIE_COMMENT: `DELETE_MOVIE_COMMENT`,
   SET_FORM_ERROR_STATUS: `SET_FORM_ERROR_STATUS`,
@@ -27,16 +27,16 @@ const ActionType = {
 } as const;
 
 export const ActionCreator = {
-  loadMovieComments: (comments: Comment[]) => {
+  setMovieComments: (comments: Comment[]) => {
     return {
-      type: ActionType.LOAD_MOVIE_COMMENTS,
+      type: ActionType.SET_MOVIE_COMMENTS,
       payload: comments,
     };
   },
 
-  sendComment: (comment: Comment) => {
+  addComment: (comment: Comment) => {
     return {
-      type: ActionType.SEND_COMMENT,
+      type: ActionType.ADD_COMMENT,
       payload: comment,
     };
   },
@@ -75,7 +75,7 @@ export const Operation = {
     (movieId: number): ThunkActionType =>
     async (dispatch) => {
       const loadedComments = await CommentsService.loadMovieComments(movieId);
-      dispatch(ActionCreator.loadMovieComments(loadedComments));
+      dispatch(ActionCreator.setMovieComments(loadedComments));
     },
 
   sendComment:
@@ -84,7 +84,7 @@ export const Operation = {
       dispatch(ActionCreator.setFormBlockStatus(true));
       try {
         const newComment = await CommentsService.sendComment(movieId, comment);
-        dispatch(ActionCreator.sendComment(newComment));
+        dispatch(ActionCreator.addComment(newComment));
       } catch (err) {
         dispatch(ActionCreator.setFormErrorStatus(true));
         setTimeout(() => {
@@ -108,9 +108,9 @@ export const reducer = (
   action: CommentActionType,
 ): InitialStateType => {
   switch (action.type) {
-    case ActionType.LOAD_MOVIE_COMMENTS:
+    case ActionType.SET_MOVIE_COMMENTS:
       return { ...state, comments: action.payload };
-    case ActionType.SEND_COMMENT:
+    case ActionType.ADD_COMMENT:
       return {
         ...state,
         comments: [...state.comments, action.payload],

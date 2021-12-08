@@ -2,10 +2,10 @@ import { GlobalState } from "../reducer";
 import { Comment } from "../../types";
 
 export const getMovieComments = (state: GlobalState): Comment[] =>
-  state.COMMENT.comments;
+  state.comments.comments;
 
 export const getFormBlockedStatus = (state: GlobalState) =>
-  state.COMMENT.isFormBlocked;
+  state.comments.isFormBlocked;
 
 export const getFormErrorStatus = (state: GlobalState) =>
-  state.COMMENT.isFormError;
+  state.comments.isFormError;

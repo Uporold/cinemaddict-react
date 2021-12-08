@@ -80,7 +80,6 @@ export const Operation = {
   login:
     (authData: AuthData): ThunkActionType =>
     async (dispatch): Promise<void> => {
-      dispatch(ActionCreator.setFormError(false, []));
       try {
         const response = await AuthService.auth(
           authData.login,
@@ -102,7 +101,6 @@ export const Operation = {
   register:
     (authData: RegistrationData): ThunkActionType =>
     async (dispatch): Promise<void> => {
-      dispatch(ActionCreator.resetErrors());
       try {
         await AuthService.register(
           authData.name,

@@ -1,4 +1,4 @@
-import { Comment, Movie, UserDetails, UserDetailsToUpdate } from "../../types";
+import { Movie, UserDetails, UserDetailsToUpdate } from "../../types";
 import { AllReduxActions, BaseThunkActionType } from "../reducer";
 import { API_URL } from "../../api";
 import { MoviesService } from "../../services/movies-service/movies-service";
@@ -16,9 +16,8 @@ type InitialStateType = typeof initialState;
 type ThunkActionType = BaseThunkActionType<AllReduxActions>;
 
 const ActionType = {
-  LOAD_MOVIES: `LOAD_MOVIES`,
-  LOAD_MOVIE: `LOAD_MOVIE`,
-  LOAD_MOVIE_COMMENTS: `LOAD_MOVIE_COMMENTS`,
+  SET_MOVIES: `SET_MOVIES`,
+  SET_MOVIE: `SET_MOVIE`,
   SHOW_MORE_MOVIES: `SHOW_MORE_MOVIES`,
   SET_DEFAULT_MOVIES_COUNT: `SET_DEFAULT_MOVIES_COUNT`,
   UPDATE_USER_DETAILS: `UPDATE_USER_DETAILS`,
@@ -29,22 +28,15 @@ const ActionType = {
 export const ActionCreator = {
   loadMovies: (movies: Movie[]) => {
     return {
-      type: ActionType.LOAD_MOVIES,
+      type: ActionType.SET_MOVIES,
       payload: movies,
     };
   },
 
   loadMovie: (movie: Movie) => {
     return {
-      type: ActionType.LOAD_MOVIE,
+      type: ActionType.SET_MOVIE,
       payload: movie,
-    };
-  },
-
-  loadMovieComments: (comments: Comment[]) => {
-    return {
-      type: ActionType.LOAD_MOVIE_COMMENTS,
-      payload: comments,
     };
   },
 
@@ -108,9 +100,9 @@ export const reducer = (
   action: AllReduxActions,
 ): InitialStateType => {
   switch (action.type) {
-    case ActionType.LOAD_MOVIES:
+    case ActionType.SET_MOVIES:
       return { ...state, movies: action.payload };
-    case ActionType.LOAD_MOVIE:
+    case ActionType.SET_MOVIE:
       return { ...state, currentMovie: action.payload };
     case ActionType.SHOW_MORE_MOVIES:
       return {
