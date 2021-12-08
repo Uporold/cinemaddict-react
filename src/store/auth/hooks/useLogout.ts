@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useCallback } from "react";
 import { Operation } from "../auth";
+import { useStoreDispatch } from "../../reducer";
 
 export const useLogout = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
-  return () => {
+  return useCallback(() => {
     dispatch(Operation.logout());
-  };
+  }, [dispatch]);
 };

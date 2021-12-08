@@ -19,19 +19,19 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuthorizationStatus(state, action) {
+    SET_AUTH_STATUS(state, action) {
       state.authorizationStatus = action.payload;
     },
-    finishLogin(state, action) {
+    FINISH_LOGIN(state, action) {
       state.user = action.payload;
     },
-    finishRegistration(state) {
+    FINISH_REGISTRATION(state) {
       return state;
     },
-    logout(state) {
+    LOGOUT(state) {
       state.user = null;
     },
-    setFormError(
+    SET_FORM_ERROR(
       state,
       action: PayloadAction<{ status: boolean; messages: string[] }>,
     ) {
@@ -40,7 +40,7 @@ const authSlice = createSlice({
         ? [...action.payload.messages]
         : [action.payload.messages];
     },
-    resetErrors(state) {
+    RESET_FORM_ERRORS(state) {
       state.isFormError = false;
       state.errorMessages = [];
     },
@@ -51,18 +51,17 @@ export const Operation = {
   login:
     (authData: AuthData): AppThunk =>
     async (dispatch) => {
-      dispatch(authSlice.actions.setFormError({ status: false, messages: [] }));
       try {
         const response = await AuthService.auth(
           authData.login,
           authData.password,
         );
-        dispatch(authSlice.actions.setAuthorizationStatus(true));
-        dispatch(authSlice.actions.finishLogin(response));
+        dispatch(authSlice.actions.SET_AUTH_STATUS(true));
+        dispatch(authSlice.actions.FINISH_LOGIN(response));
         history.push(`/`);
       } catch (e: any) {
         dispatch(
-          authSlice.actions.setFormError({
+          authSlice.actions.SET_FORM_ERROR({
             status: true,
             messages: e.data?.message || "Something went wrong, try again",
           }),
@@ -73,7 +72,6 @@ export const Operation = {
   register:
     (authData: RegistrationData): AppThunk =>
     async (dispatch) => {
-      dispatch(authSlice.actions.resetErrors());
       try {
         await AuthService.register(
           authData.name,
@@ -81,11 +79,11 @@ export const Operation = {
           authData.email,
           authData.password,
         );
-        dispatch(authSlice.actions.finishRegistration());
+        dispatch(authSlice.actions.FINISH_REGISTRATION());
         history.push(`/login`);
       } catch (e: any) {
         dispatch(
-          authSlice.actions.setFormError({
+          authSlice.actions.SET_FORM_ERROR({
             status: true,
             messages: e.data?.message || "Something went wrong, try again",
           }),
@@ -95,13 +93,12 @@ export const Operation = {
 
   logout: (): AppThunk => (dispatch) => {
     AuthService.logout();
-    dispatch(authSlice.actions.setAuthorizationStatus(false));
-    dispatch(appSlice.actions.resetAppState());
-    dispatch(authSlice.actions.logout());
+    dispatch(authSlice.actions.SET_AUTH_STATUS(false));
+    dispatch(appSlice.actions.RESET_APP_STATE());
+    dispatch(authSlice.actions.LOGOUT());
   },
 };
 
-export const { setAuthorizationStatus, logout, resetErrors } =
-  authSlice.actions;
+export const { RESET_FORM_ERRORS } = authSlice.actions;
 
 export default authSlice.reducer;

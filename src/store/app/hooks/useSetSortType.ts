@@ -1,13 +1,13 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { setSortType } from "../app";
+import { useStoreDispatch } from "../../reducer";
+import { SET_SORT_TYPE } from "../app";
 
 export const useSetSortType = (): ((sortType: string) => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(
     (sortType) => {
-      dispatch(setSortType(sortType));
+      dispatch(SET_SORT_TYPE(sortType));
     },
     [dispatch],
   );

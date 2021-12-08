@@ -1,13 +1,13 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { setFilterType } from "../app";
+import { useStoreDispatch } from "../../reducer";
+import { SET_FILTER_TYPE } from "../app";
 
 export const useSetFilterType = (): ((filterType: string) => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(
     (filterType) => {
-      dispatch(setFilterType(filterType));
+      dispatch(SET_FILTER_TYPE(filterType));
     },
     [dispatch],
   );

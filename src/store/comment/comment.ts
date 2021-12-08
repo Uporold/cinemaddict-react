@@ -9,23 +9,23 @@ export const initialState = {
   isFormError: false,
 };
 
-export const commentSlice = createSlice({
-  name: "comment",
+export const commentsSlice = createSlice({
+  name: "comments",
   initialState,
   reducers: {
-    loadMovieComments(state, action) {
+    SET_COMMENTS(state, action) {
       state.comments = action.payload;
     },
-    sendComment(state, action) {
+    ADD_COMMENT(state, action) {
       state.comments = [...state.comments, action.payload];
     },
-    setFormBlockStatus(state, action) {
+    SET_FORM_BLOCK_STATUS(state, action) {
       state.isFormBlocked = action.payload;
     },
-    setFormErrorStatus(state, action) {
+    SET_FORM_ERROR_STATUS(state, action) {
       state.isFormError = action.payload;
     },
-    deleteComment(state, action) {
+    DELETE_COMMENT(state, action) {
       state.comments = state.comments.filter(
         (comment) => comment.id !== action.payload,
       );
@@ -38,23 +38,23 @@ export const Operation = {
     (movieId: number): AppThunk =>
     async (dispatch) => {
       const loadedComments = await CommentsService.loadMovieComments(movieId);
-      dispatch(commentSlice.actions.loadMovieComments(loadedComments));
+      dispatch(commentsSlice.actions.SET_COMMENTS(loadedComments));
     },
 
   sendComment:
     (movieId: number, comment: CommentPure): AppThunk =>
     async (dispatch) => {
-      dispatch(commentSlice.actions.setFormBlockStatus(true));
+      dispatch(commentsSlice.actions.SET_FORM_BLOCK_STATUS(true));
       try {
         const newComment = await CommentsService.sendComment(movieId, comment);
-        dispatch(commentSlice.actions.sendComment(newComment));
+        dispatch(commentsSlice.actions.ADD_COMMENT(newComment));
       } catch (err) {
-        dispatch(commentSlice.actions.setFormErrorStatus(true));
+        dispatch(commentsSlice.actions.SET_FORM_ERROR_STATUS(true));
         setTimeout(() => {
-          dispatch(commentSlice.actions.setFormErrorStatus(false));
+          dispatch(commentsSlice.actions.SET_FORM_ERROR_STATUS(false));
         }, 600);
       } finally {
-        dispatch(commentSlice.actions.setFormBlockStatus(false));
+        dispatch(commentsSlice.actions.SET_FORM_BLOCK_STATUS(false));
       }
     },
 
@@ -62,8 +62,8 @@ export const Operation = {
     (commentId: number): AppThunk =>
     async (dispatch) => {
       await CommentsService.deleteComment(commentId);
-      dispatch(commentSlice.actions.deleteComment(commentId));
+      dispatch(commentsSlice.actions.DELETE_COMMENT(commentId));
     },
 };
 
-export default commentSlice.reducer;
+export default commentsSlice.reducer;

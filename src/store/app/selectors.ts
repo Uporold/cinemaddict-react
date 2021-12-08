@@ -1,10 +1,10 @@
-import { GlobalState } from "../reducer";
+import { RootState } from "../reducer";
 
-export const getFilterType = (state: GlobalState): string =>
-  state.APP.currentFilterType;
+export const getFilterType = (state: RootState): string =>
+  state.app.currentFilterType;
 
-export const getSortType = (state: GlobalState): string =>
-  state.APP.currentSortType;
+export const getSortType = (state: RootState): string =>
+  state.app.currentSortType;
 
-export const getStatisticStatus = (state: GlobalState): boolean =>
-  state.APP.isStatisticMode;
+export const getStatisticStatus = (state: RootState): boolean =>
+  state.app.isStatisticMode;

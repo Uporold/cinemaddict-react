@@ -13,23 +13,20 @@ export const initialState = {
   isMoviesLoading: false,
 };
 
-export const movieSlice = createSlice({
-  name: "movie",
+export const moviesSlice = createSlice({
+  name: "movies",
   initialState,
   reducers: {
-    loadMovies(state, action) {
+    SET_MOVIES(state, action) {
       state.movies = action.payload;
     },
-    loadCurrentMovie(state, action) {
+    SET_CURRENT_MOVIE(state, action) {
       state.currentMovie = action.payload;
     },
-    showMoreMovies(state) {
+    SHOW_MORE_MOVIES(state) {
       state.showedMoviesCount += CUT_LENGTH;
     },
-    setDefaultMoviesCount(state) {
-      state.showedMoviesCount = CUT_LENGTH;
-    },
-    updateUserDetails(
+    UPDATE_USER_DETAILS(
       state,
       action: PayloadAction<{ movieId: number; userDetails: UserDetails }>,
     ) {
@@ -44,10 +41,10 @@ export const movieSlice = createSlice({
           ? { ...state.currentMovie, userDetails: action.payload.userDetails }
           : state.currentMovie;
     },
-    setMoviesLoadingStatus(state, action) {
+    SET_MOVIES_LOADING_STATUS(state, action) {
       state.isMoviesLoading = action.payload;
     },
-    resetCurrentMovie(state) {
+    RESET_CURRENT_MOVIE(state) {
       state.currentMovie = {} as Movie;
     },
   },
@@ -55,17 +52,17 @@ export const movieSlice = createSlice({
 
 export const Operation = {
   loadMovies: (): AppThunk => async (dispatch) => {
-    dispatch(movieSlice.actions.setMoviesLoadingStatus(true));
+    dispatch(moviesSlice.actions.SET_MOVIES_LOADING_STATUS(true));
     const loadedMovies = await MoviesService.loadMovies();
-    dispatch(movieSlice.actions.loadMovies(loadedMovies));
-    dispatch(movieSlice.actions.setMoviesLoadingStatus(false));
+    dispatch(moviesSlice.actions.SET_MOVIES(loadedMovies));
+    dispatch(moviesSlice.actions.SET_MOVIES_LOADING_STATUS(false));
   },
 
   loadMovie:
     (movieId: number): AppThunk =>
     async (dispatch) => {
       const movie = await MoviesService.loadMovie(movieId);
-      dispatch(movieSlice.actions.loadCurrentMovie(movie));
+      dispatch(moviesSlice.actions.SET_CURRENT_MOVIE(movie));
     },
 
   updateUserDetails:
@@ -76,7 +73,7 @@ export const Operation = {
         userDetails,
       );
       dispatch(
-        movieSlice.actions.updateUserDetails({
+        moviesSlice.actions.UPDATE_USER_DETAILS({
           movieId,
           userDetails: updatedUserDetails,
         }),
@@ -84,6 +81,6 @@ export const Operation = {
     },
 };
 
-export const { resetCurrentMovie, showMoreMovies } = movieSlice.actions;
+export const { RESET_CURRENT_MOVIE, SHOW_MORE_MOVIES } = moviesSlice.actions;
 
-export default movieSlice.reducer;
+export default moviesSlice.reducer;

@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { openStatistic } from "../app";
+import { useStoreDispatch } from "../../reducer";
+import { OPEN_STATISTIC } from "../app";
 
 export const useSetStatisticMode = (): (() => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
-    dispatch(openStatistic());
+    dispatch(OPEN_STATISTIC());
   }, [dispatch]);
 };

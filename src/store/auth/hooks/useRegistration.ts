@@ -1,10 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
+import { useStoreDispatch } from "../../reducer";
 import { Operation } from "../auth";
 import { RegistrationData } from "../../../types";
 
 export const useRegistration = (): ((authData: RegistrationData) => void) => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(
     (authData) => {

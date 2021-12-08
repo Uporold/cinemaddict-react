@@ -11,24 +11,28 @@ export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setFilterType(state, action) {
+    SET_FILTER_TYPE(state, action) {
       state.currentFilterType = action.payload;
       state.isStatisticMode = false;
     },
-    setSortType(state, action) {
+    SET_SORT_TYPE(state, action) {
       state.currentSortType = action.payload;
     },
-    openStatistic(state) {
+    OPEN_STATISTIC(state) {
       state.isStatisticMode = true;
       state.currentSortType = SortType.DEFAULT;
     },
-    resetAppState() {
+    RESET_APP_STATE() {
       return initialState;
     },
   },
 });
 
-export const { setFilterType, setSortType, openStatistic, resetAppState } =
-  appSlice.actions;
+export const {
+  SET_FILTER_TYPE,
+  SET_SORT_TYPE,
+  OPEN_STATISTIC,
+  RESET_APP_STATE,
+} = appSlice.actions;
 
 export default appSlice.reducer;
