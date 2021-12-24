@@ -113,7 +113,7 @@ export const reducer = (
     case ActionType.ADD_COMMENT:
       return {
         ...state,
-        comments: [...state.comments, action.payload],
+        comments: [action.payload, ...state.comments],
       };
     case ActionType.SET_FORM_BLOCK_STATUS:
       return { ...state, isFormBlocked: action.payload };
