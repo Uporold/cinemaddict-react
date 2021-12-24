@@ -4,12 +4,19 @@ import {
   getCurrentMovie,
   getMovie,
   getMovies,
+  getMoviesCountByCurrentFilter,
+  getMoviesCountByFilter,
   getMoviesLoadingStatus,
+  getRank,
   getShowedMovies,
   getShowedSortedFilteredMovies,
 } from "../selectors";
 
 export const useMovies = (): Movie[] => useSelector(getMovies);
+
+export const useRank = (): string => {
+  return useSelector(getRank);
+};
 
 export const useMovie = (): Movie => useSelector(getMovie);
 
@@ -27,4 +34,12 @@ export const useCurrentMovie = (id: number): Movie => {
 
 export const useMoviesLoadingStatus = (): boolean => {
   return useSelector(getMoviesLoadingStatus);
+};
+
+export const useMoviesCountByCurrentFilter = (): number => {
+  return useSelector(getMoviesCountByCurrentFilter);
+};
+
+export const useMoviesCountByFilter = (filterType: string): number => {
+  return useSelector(getMoviesCountByFilter(filterType));
 };

@@ -9,7 +9,7 @@ import AuthVerify from "../../utils/auth-verify";
 import { useLogout } from "../../store/auth/hooks/useLogout";
 import { useAuthorizationStatus } from "../../store/auth/hooks/selectors";
 import { Registration } from "../../pages/registration/registration";
-import NotFound from "../not-found/not-found";
+import { NotFound } from "../not-found/not-found";
 
 export const App: React.FC = (): JSX.Element => {
   const logout = useLogout();
