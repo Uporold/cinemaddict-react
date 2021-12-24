@@ -17,7 +17,7 @@ export const rootReducer = combineReducers({
   comments,
 });
 
-export type GlobalState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof rootReducer>;
 
 const combinedActions = {
   ...DataActions,
@@ -29,7 +29,7 @@ const combinedActions = {
 export const store = createStore(
   rootReducer,
   composeWithDevTools(
-    applyMiddleware(thunk as ThunkMiddleware<GlobalState, AllReduxActions>),
+    applyMiddleware(thunk as ThunkMiddleware<RootState, AllReduxActions>),
   ),
 );
 
@@ -45,7 +45,7 @@ export type InferActionsTypes<T> = T extends { [key: string]: infer U }
 
 export type BaseThunkActionType<A extends Action = Action> = ThunkAction<
   Promise<void>,
-  GlobalState,
+  RootState,
   AxiosInstance,
   A
 >;

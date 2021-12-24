@@ -1,21 +1,20 @@
 import { createSelector } from "reselect";
-import { GlobalState } from "../reducer";
+import { RootState } from "../reducer";
 import { Movie } from "../../types";
 import { getMoviesByFilter } from "../../utils/filter";
 import { getMoviesBySort } from "../../utils/sorting";
 import { getFilterType, getSortType } from "../app/selectors";
 import { getUserRank } from "../../utils/common";
 
-export const getMovies = (state: GlobalState): Movie[] => state.movies.movies;
+export const getMovies = (state: RootState): Movie[] => state.movies.movies;
 
 export const getRank = createSelector(getMovies, (movies) =>
   getUserRank(movies),
 );
 
-export const getMovie = (state: GlobalState): Movie =>
-  state.movies.currentMovie;
+export const getMovie = (state: RootState): Movie => state.movies.currentMovie;
 
-export const getShowedMoviesCount = (state: GlobalState): number =>
+export const getShowedMoviesCount = (state: RootState): number =>
   state.movies.showedMoviesCount;
 
 export const getShowedMovies = createSelector(
@@ -69,5 +68,5 @@ export const getCurrentMovie = (id: number) =>
     movies.find((movie) => movie.id === Number(id)),
   );
 
-export const getMoviesLoadingStatus = (state: GlobalState): boolean =>
+export const getMoviesLoadingStatus = (state: RootState): boolean =>
   state.movies.isMoviesLoading;
