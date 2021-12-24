@@ -17,7 +17,7 @@ export const commentsSlice = createSlice({
       state.comments = action.payload;
     },
     ADD_COMMENT(state, action) {
-      state.comments = [...state.comments, action.payload];
+      state.comments = [action.payload, ...state.comments];
     },
     SET_FORM_BLOCK_STATUS(state, action) {
       state.isFormBlocked = action.payload;
