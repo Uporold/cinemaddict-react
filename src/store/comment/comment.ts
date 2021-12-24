@@ -16,7 +16,7 @@ export const comments = createModel<RootModel>()({
       state.comments = payload;
     },
     ADD_COMMENT(state, payload: Comment) {
-      state.comments = [...state.comments, payload];
+      state.comments = [payload, ...state.comments];
     },
     SET_FORM_BLOCK_STATUS(state, payload: boolean) {
       state.isFormBlocked = payload;
