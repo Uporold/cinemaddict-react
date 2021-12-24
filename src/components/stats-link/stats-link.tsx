@@ -14,15 +14,14 @@ export const StatsLink: React.FC = (): JSX.Element => {
   const isAuth = useAuthorizationStatus();
   const style = !isAuth ? disableStyle : {};
   return (
-    <a
-      href="#stats"
+    <span
       style={style}
-      className={`main-navigation__additional  ${
+      className={`main-navigation__additional ${
         isStatisticOpen ? `main-navigation__item--active` : ``
       }`}
       onClick={openStatistic}
     >
       Stats
-    </a>
+    </span>
   );
 };

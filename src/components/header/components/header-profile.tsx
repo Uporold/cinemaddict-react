@@ -1,15 +1,13 @@
 import React from "react";
-import { useMovies } from "../../../store/movie/hooks/selectors";
+import { useRank } from "../../../store/movie/hooks/selectors";
 import { useLogout } from "../../../store/auth/hooks/useLogout";
-import { getUserRank } from "../../../utils/common";
 
 interface Props {
   name: string;
 }
 
 export const HeaderProfile: React.FC<Props> = ({ name }) => {
-  const movies = useMovies();
-  const userRank = getUserRank(movies);
+  const userRank = useRank();
   const logout = useLogout();
   return (
     <section className="header__profile profile">

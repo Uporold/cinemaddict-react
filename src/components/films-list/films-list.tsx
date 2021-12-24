@@ -2,10 +2,8 @@ import React from "react";
 import { FilmCard } from "./components/film-card/film-card";
 import { ShowMoreButton } from "./components/show-more-button";
 import { Movie } from "../../types";
-import { useMovies } from "../../store/movie/hooks/selectors";
+import { useMoviesCountByCurrentFilter } from "../../store/movie/hooks/selectors";
 import { useShowMoreMovies } from "../../store/movie/hooks/useShowMoreMovies";
-import { getFilterItemCount } from "../../utils/filter";
-import { useCurrentFilterType } from "../../store/app/hooks/selectors";
 
 interface Props {
   movies: Movie[];
@@ -22,10 +20,8 @@ export const FilmsList: React.FC<Props> = ({
   title,
   isExtra,
 }): JSX.Element => {
-  const allMovies = useMovies();
-  const getMoviesCountByFilter = getFilterItemCount(allMovies);
   const showMoreMovies = useShowMoreMovies();
-  const currentFilterType = useCurrentFilterType();
+  const moviesCountByFilter = useMoviesCountByCurrentFilter();
   return (
     <section className={`films-list${isExtra ? `--extra` : ``}`}>
       <h2 className={`films-list__title ${isExtra ? `` : `visually-hidden`}`}>
@@ -36,8 +32,9 @@ export const FilmsList: React.FC<Props> = ({
           <FilmCard key={movie.id + movie.title} movie={movie} />
         ))}
       </div>
-      {movies.length < getMoviesCountByFilter(currentFilterType) &&
-        !isExtra && <ShowMoreButton onShowMoreButtonClick={showMoreMovies} />}
+      {movies.length < moviesCountByFilter && !isExtra && (
+        <ShowMoreButton onShowMoreButtonClick={showMoreMovies} />
+      )}
     </section>
   );
 };
