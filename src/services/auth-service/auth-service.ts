@@ -30,5 +30,3 @@ export class AuthService extends Service {
     });
   }
 }
-
-// AuthService.initialize();

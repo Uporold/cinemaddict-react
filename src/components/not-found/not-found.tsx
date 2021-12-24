@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
-const NotFound = () => {
+export const NotFound = () => {
   const style = {
     minHeight: "inherit",
     display: "flex",
@@ -19,5 +19,3 @@ const NotFound = () => {
     </div>
   );
 };
-
-export default NotFound;

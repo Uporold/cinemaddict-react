@@ -1,15 +1,21 @@
 import { createSelector } from "reselect";
-import { RootState } from "../reducer";
+import { GlobalState } from "../reducer";
 import { Movie } from "../../types";
 import { getMoviesByFilter } from "../../utils/filter";
 import { getMoviesBySort } from "../../utils/sorting";
 import { getFilterType, getSortType } from "../app/selectors";
+import { getUserRank } from "../../utils/common";
 
-export const getMovies = (state: RootState): Movie[] => state.movies.movies;
+export const getMovies = (state: GlobalState): Movie[] => state.movies.movies;
 
-export const getMovie = (state: RootState): Movie => state.movies.currentMovie;
+export const getRank = createSelector(getMovies, (movies) =>
+  getUserRank(movies),
+);
 
-export const getShowedMoviesCount = (state: RootState): number =>
+export const getMovie = (state: GlobalState): Movie =>
+  state.movies.currentMovie;
+
+export const getShowedMoviesCount = (state: GlobalState): number =>
   state.movies.showedMoviesCount;
 
 export const getShowedMovies = createSelector(
@@ -45,10 +51,23 @@ export const getShowedSortedFilteredMovies = createSelector(
   },
 );
 
+export const getMoviesCountByCurrentFilter = createSelector(
+  getMovies,
+  getFilterType,
+  (movies, filterType) => {
+    return getMoviesByFilter(movies, filterType).length;
+  },
+);
+
+export const getMoviesCountByFilter = (filterType: string) =>
+  createSelector(getMovies, (movies) => {
+    return getMoviesByFilter(movies, filterType).length;
+  });
+
 export const getCurrentMovie = (id: number) =>
   createSelector(getMovies, (movies) =>
     movies.find((movie) => movie.id === Number(id)),
   );
 
-export const getMoviesLoadingStatus = (state: RootState): boolean =>
+export const getMoviesLoadingStatus = (state: GlobalState): boolean =>
   state.movies.isMoviesLoading;
