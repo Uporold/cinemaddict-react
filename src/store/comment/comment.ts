@@ -1,4 +1,4 @@
-import { Comment, CommentPure, Movie } from "../../types";
+import { Comment, CommentPure } from "../../types";
 import {
   AllReduxActions,
   BaseThunkActionType,
@@ -19,11 +19,9 @@ type ThunkActionTypeAll = BaseThunkActionType<AllReduxActions>;
 
 const ActionType = {
   SET_MOVIE_COMMENTS: `SET_MOVIE_COMMENTS`,
-  ADD_COMMENT: `ADD_COMMENT`,
-  UPDATE_MOVIE_COMMENTS: `UPDATE_MOVIE_COMMENTS`,
-  DELETE_MOVIE_COMMENT: `DELETE_MOVIE_COMMENT`,
   SET_FORM_ERROR_STATUS: `SET_FORM_ERROR_STATUS`,
   SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
+  RESET_COMMENTS: `RESET_COMMENTS`,
 } as const;
 
 export const ActionCreator = {
@@ -31,27 +29,6 @@ export const ActionCreator = {
     return {
       type: ActionType.SET_MOVIE_COMMENTS,
       payload: comments,
-    };
-  },
-
-  addComment: (comment: Comment) => {
-    return {
-      type: ActionType.ADD_COMMENT,
-      payload: comment,
-    };
-  },
-
-  deleteComment: (commentId: number) => {
-    return {
-      type: ActionType.DELETE_MOVIE_COMMENT,
-      payload: commentId,
-    };
-  },
-
-  updateMovieComments: (movie: Movie) => {
-    return {
-      type: ActionType.UPDATE_MOVIE_COMMENTS,
-      payload: movie,
     };
   },
 
@@ -66,6 +43,12 @@ export const ActionCreator = {
     return {
       type: ActionType.SET_FORM_BLOCK_STATUS,
       payload: status,
+    };
+  },
+
+  resetComments: () => {
+    return {
+      type: ActionType.RESET_COMMENTS,
     };
   },
 };
@@ -83,8 +66,8 @@ export const Operation = {
     async (dispatch) => {
       dispatch(ActionCreator.setFormBlockStatus(true));
       try {
-        const newComment = await CommentsService.sendComment(movieId, comment);
-        dispatch(ActionCreator.addComment(newComment));
+        await CommentsService.sendComment(movieId, comment);
+        await dispatch(Operation.loadMovieComments(movieId));
       } catch (err) {
         dispatch(ActionCreator.setFormErrorStatus(true));
         setTimeout(() => {
@@ -96,10 +79,10 @@ export const Operation = {
     },
 
   deleteComment:
-    (commentId: number): ThunkActionType =>
+    (commentId: number, movieId: number): ThunkActionType =>
     async (dispatch) => {
       await CommentsService.deleteComment(commentId);
-      dispatch(ActionCreator.deleteComment(commentId));
+      await dispatch(Operation.loadMovieComments(movieId));
     },
 };
 
@@ -110,22 +93,12 @@ export const reducer = (
   switch (action.type) {
     case ActionType.SET_MOVIE_COMMENTS:
       return { ...state, comments: action.payload };
-    case ActionType.ADD_COMMENT:
-      return {
-        ...state,
-        comments: [action.payload, ...state.comments],
-      };
     case ActionType.SET_FORM_BLOCK_STATUS:
       return { ...state, isFormBlocked: action.payload };
     case ActionType.SET_FORM_ERROR_STATUS:
       return { ...state, isFormError: action.payload };
-    case ActionType.DELETE_MOVIE_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.filter(
-          (comment) => comment.id !== action.payload,
-        ),
-      };
+    case ActionType.RESET_COMMENTS:
+      return { ...state, comments: [] };
     default:
       return state;
   }

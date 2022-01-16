@@ -7,6 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Master branch with classic redux [link](https://github.com/Uporold/cinemaddict-react/tree/master)
 - Redux-toolkit branch [link](https://github.com/Uporold/cinemaddict-react/tree/redux-toolkit)
 - Rematch branch [link](https://github.com/Uporold/cinemaddict-react/tree/rematch)
+- Mobx branch [link](https://github.com/Uporold/cinemaddict-react/tree/mobx)
 
 ## How to run locally
 - Clone this repo

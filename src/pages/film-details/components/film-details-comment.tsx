@@ -6,10 +6,11 @@ import { useUser } from "../../../store/auth/hooks/selectors";
 
 interface Props {
   comment: Comment;
+  movieId: number;
 }
 
 export const FilmDetailsComment: React.FC<Props> = memo(
-  ({ comment }): JSX.Element => {
+  ({ comment, movieId }): JSX.Element => {
     const deleteComment = useDeleteComment();
     const user = useUser();
     return (
@@ -36,7 +37,7 @@ export const FilmDetailsComment: React.FC<Props> = memo(
                 className="film-details__comment-delete"
                 type="button"
                 onClick={() => {
-                  deleteComment(comment.id);
+                  deleteComment(comment.id, movieId);
                 }}
               >
                 Delete

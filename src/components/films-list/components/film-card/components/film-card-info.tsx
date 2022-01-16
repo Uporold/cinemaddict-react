@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { Movie } from "../../../../../types";
@@ -11,7 +11,7 @@ interface Props {
   isAuth: boolean;
 }
 
-export const FilmCardInfo: React.FC<Props> = memo(({ movie, isAuth }) => {
+export const FilmCardInfo: React.FC<Props> = ({ movie, isAuth }) => {
   const slicedDescription = getSlicedDescription(movie.description, 140);
   return (
     <>
@@ -38,4 +38,4 @@ export const FilmCardInfo: React.FC<Props> = memo(({ movie, isAuth }) => {
       <p className="film-card__description">{slicedDescription}</p>
     </>
   );
-});
+};

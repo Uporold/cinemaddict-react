@@ -1,29 +1,23 @@
 import React from "react";
 import dayjs from "dayjs";
-import history from "../../../history";
 import { Movie } from "../../../types";
-import { PagePath } from "../../../const";
-import { useKeypress } from "../../../hooks/useKeypress";
-import { useResetCurrentMovie } from "../../../store/movie/hooks/useResetCurrentMovie";
 
 interface Props {
   movie: Movie;
+  exitHandler: () => void;
 }
 
-export const FilmDetailsInfo: React.FC<Props> = ({ movie }): JSX.Element => {
-  const resetCurrentMovie = useResetCurrentMovie();
-  const goToMainPageHandler = () => {
-    resetCurrentMovie();
-    history.push(PagePath.MAIN);
-  };
-  useKeypress("Escape", goToMainPageHandler);
+export const FilmDetailsInfo: React.FC<Props> = ({
+  movie,
+  exitHandler,
+}): JSX.Element => {
   return (
     <>
       <div className="film-details__close">
         <button
           className="film-details__close-btn"
           type="button"
-          onClick={goToMainPageHandler}
+          onClick={exitHandler}
         >
           close
         </button>
