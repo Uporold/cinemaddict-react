@@ -1,8 +1,10 @@
 import React from "react";
-import { useMovies } from "../../store/movie/hooks/selectors";
+import { useStore } from "../../store";
 
 export const Footer: React.FC = (): JSX.Element => {
-  const movies = useMovies();
+  const {
+    movieStore: { movies },
+  } = useStore();
   return (
     <footer className="footer">
       <section className="footer__logo logo logo--smaller">Cinemaddict</section>

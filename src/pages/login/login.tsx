@@ -1,29 +1,23 @@
 import React, { useEffect, useRef } from "react";
+import { observer } from "mobx-react-lite";
 import { Header } from "../../components/header/header";
 import { Footer } from "../../components/footer/footer";
-import { useLogin } from "../../store/auth/hooks/useLogin";
 import { InputField } from "../../components/input-field/input-field";
-import {
-  useFormErrorMessage,
-  useFormErrorStatus,
-} from "../../store/auth/hooks/selectors";
-import { useResetErrors } from "../../store/auth/hooks/useResetErrors";
 import { ErrorsList } from "../../components/errors-list/errors-list";
+import { useStore } from "../../store";
 
-export const Login: React.FC = (): JSX.Element => {
+export const Login: React.FC = observer((): JSX.Element => {
+  const {
+    authStore: { errorMessages, isFormError, login, resetErrors },
+  } = useStore();
+
   const passwordRef = useRef<HTMLInputElement>(null);
   const loginRef = useRef<HTMLInputElement>(null);
 
-  const errorMessages = useFormErrorMessage();
-  const isFormError = useFormErrorStatus();
-
-  const onSubmit = useLogin();
-  const resetErrors = useResetErrors();
-
-  const handleSubmit = (evt: React.FormEvent) => {
+  const handleSubmit = async (evt: React.FormEvent) => {
     evt.preventDefault();
 
-    onSubmit({
+    await login({
       login: (loginRef.current as HTMLInputElement).value,
       password: (passwordRef.current as HTMLInputElement).value,
     });
@@ -66,4 +60,4 @@ export const Login: React.FC = (): JSX.Element => {
       <Footer />
     </>
   );
-};
+});

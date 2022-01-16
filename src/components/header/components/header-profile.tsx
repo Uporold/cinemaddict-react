@@ -1,14 +1,16 @@
 import React from "react";
-import { useRank } from "../../../store/movie/hooks/selectors";
-import { useLogout } from "../../../store/auth/hooks/useLogout";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../../store";
 
 interface Props {
   name: string;
 }
 
-export const HeaderProfile: React.FC<Props> = ({ name }) => {
-  const userRank = useRank();
-  const logout = useLogout();
+export const HeaderProfile: React.FC<Props> = observer(({ name }) => {
+  const {
+    movieStore: { userRank },
+    authStore: { logout },
+  } = useStore();
   return (
     <section className="header__profile profile">
       <div className="profile__user">
@@ -29,4 +31,4 @@ export const HeaderProfile: React.FC<Props> = ({ name }) => {
       </button>
     </section>
   );
-};
+});

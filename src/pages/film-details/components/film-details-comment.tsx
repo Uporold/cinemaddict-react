@@ -1,17 +1,20 @@
-import React, { memo } from "react";
+import React from "react";
 import dayjs from "dayjs";
+import { observer } from "mobx-react-lite";
 import { Comment } from "../../../types";
-import { useDeleteComment } from "../../../store/comment/hooks/useDeleteComment";
-import { useUser } from "../../../store/auth/hooks/selectors";
+import { useStore } from "../../../store";
 
 interface Props {
   comment: Comment;
+  movieId: number;
 }
 
-export const FilmDetailsComment: React.FC<Props> = memo(
-  ({ comment }): JSX.Element => {
-    const deleteComment = useDeleteComment();
-    const user = useUser();
+export const FilmDetailsComment: React.FC<Props> = observer(
+  ({ comment, movieId }): JSX.Element => {
+    const {
+      commentStore: { deleteComment },
+      authStore: { user },
+    } = useStore();
     return (
       <li className="film-details__comment">
         <span className="film-details__comment-emoji">
@@ -35,8 +38,8 @@ export const FilmDetailsComment: React.FC<Props> = memo(
               <button
                 className="film-details__comment-delete"
                 type="button"
-                onClick={() => {
-                  deleteComment(comment.id);
+                onClick={async () => {
+                  await deleteComment(comment.id, movieId);
                 }}
               >
                 Delete

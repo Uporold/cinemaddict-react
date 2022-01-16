@@ -1,11 +1,12 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import { SortType } from "../../../const";
-import { useCurrentSortType } from "../../../store/app/hooks/selectors";
-import { useSetSortType } from "../../../store/app/hooks/useSetSortType";
+import { useStore } from "../../../store";
 
-export const Sorting: React.FC = (): JSX.Element => {
-  const currentSortType = useCurrentSortType();
-  const setSortType = useSetSortType();
+export const Sorting: React.FC = observer((): JSX.Element => {
+  const {
+    appStore: { currentSortType, setSortType },
+  } = useStore();
 
   const onFilterItemClickHandler =
     (sortType: string) => (evt: React.MouseEvent) => {
@@ -29,4 +30,4 @@ export const Sorting: React.FC = (): JSX.Element => {
       ))}
     </ul>
   );
-};
+});

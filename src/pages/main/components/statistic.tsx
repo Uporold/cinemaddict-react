@@ -10,14 +10,16 @@ import {
   getTotalTime,
   TimePeriod,
 } from "../../../utils/chart";
-import { useMovies } from "../../../store/movie/hooks/selectors";
 import { getUserRank } from "../../../utils/common";
+import { useStore } from "../../../store";
 
 dayjs.extend(duration);
 
 export const Statistic: React.FC = (): JSX.Element => {
   const [currentStatisticFilter, setFilter] = useState(TimePeriod.ALL_TIME);
-  const movies = useMovies();
+  const {
+    movieStore: { movies },
+  } = useStore();
   const watchedMovies = getFilteredStatisticMovies(
     movies,
     currentStatisticFilter,

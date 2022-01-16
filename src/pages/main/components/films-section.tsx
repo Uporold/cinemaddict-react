@@ -1,21 +1,25 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import { FilmsList } from "../../../components/films-list/films-list";
-import { useShowedSortedFilteredMovies } from "../../../store/movie/hooks/selectors";
-import {
-  useMostCommentedMovies,
-  useTopRatedMovies,
-} from "../../../store/app/hooks/selectors";
+import { useStore } from "../../../store";
 
-export const FilmsSection: React.FC = (): JSX.Element => {
-  const showedMovies = useShowedSortedFilteredMovies();
-  const topRatedMovies = useTopRatedMovies();
-  const mostCommentedMovies = useMostCommentedMovies();
+export const FilmsSection: React.FC = observer((): JSX.Element => {
+  const {
+    movieStore: {
+      showedSortedFilteredMovies,
+      topRatedMovies,
+      mostCommentedMovies,
+    },
+  } = useStore();
 
   return (
     <section className="films">
-      <FilmsList movies={showedMovies} title="All movies. Upcoming" />
+      <FilmsList
+        movies={showedSortedFilteredMovies}
+        title="All movies. Upcoming"
+      />
       <FilmsList movies={topRatedMovies} title="Top rated" isExtra />
       <FilmsList movies={mostCommentedMovies} title="Most commented" isExtra />
     </section>
   );
-};
+});

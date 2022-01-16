@@ -1,10 +1,7 @@
 import React, { useState } from "react";
+import { observer } from "mobx-react-lite";
 import { emojis } from "../../../const";
-import { useSendComment } from "../../../store/comment/hooks/useSendComment";
-import {
-  useFormBlockedStatus,
-  useFormErrorStatus,
-} from "../../../store/comment/hooks/selectors";
+import { useStore } from "../../../store";
 
 interface Props {
   movieId: number;
@@ -25,90 +22,96 @@ const styles = {
   border: `none`,
 } as React.CSSProperties;
 
-export const FilmDetailsCommentForm: React.FC<Props> = ({
-  movieId,
-}): JSX.Element => {
-  const [emoji, setEmoji] = useState(``);
-  const [message, setComment] = useState(``);
+export const FilmDetailsCommentForm: React.FC<Props> = observer(
+  ({ movieId }): JSX.Element => {
+    const [emoji, setEmoji] = useState(``);
+    const [message, setComment] = useState(``);
 
-  const isFormBlocked = useFormBlockedStatus();
-  const isFormError = useFormErrorStatus();
+    const {
+      commentStore: { isFormError, isFormBlocked, sendComment },
+    } = useStore();
 
-  const sendComment = useSendComment();
+    const onEmojiClickHandler = (target: string) => () => {
+      setEmoji(target);
+    };
 
-  const onEmojiClickHandler = (target: string) => () => {
-    setEmoji(target);
-  };
+    const onCommentChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setComment(evt.target.value);
+    };
 
-  const onCommentChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(evt.target.value);
-  };
+    const onSendCommentHandler = async (
+      evt: React.KeyboardEvent<HTMLFormElement>,
+    ) => {
+      if (evt.code === "Enter" && evt.ctrlKey) {
+        const data = {
+          message,
+          emotion: emoji,
+        };
+        const { currentTarget } = evt;
 
-  const onSendCommentHandler = (evt: React.KeyboardEvent<HTMLFormElement>) => {
-    if (evt.code === "Enter" && evt.ctrlKey) {
-      const data = {
-        message,
-        emotion: emoji,
-      };
-      sendComment(movieId, data);
-      evt.currentTarget.reset();
-      setComment(``);
-      setEmoji(``);
-    }
-  };
-  return (
-    <form
-      className="film-details__new-comment"
-      onKeyPress={onSendCommentHandler}
-      style={isFormError ? shakeStyle : {}}
-    >
-      <fieldset style={styles} disabled={isFormBlocked}>
-        <div className="film-details__add-emoji-label">
-          {emoji && (
-            <img
-              src={`/images/emoji/${emoji}.png`}
-              width="55"
-              height="55"
-              alt={`emoji-${emoji}`}
-            />
-          )}
-        </div>
+        const isSucceeded = await sendComment(movieId, data);
+        if (isSucceeded) {
+          currentTarget.reset();
+          setComment(``);
+          setEmoji(``);
+        }
+      }
+    };
 
-        <label className="film-details__comment-label">
-          <textarea
-            className="film-details__comment-input"
-            placeholder="Select reaction below and write comment here. Send it by Enter+Ctrl"
-            name="comment"
-            onChange={onCommentChange}
-          />
-        </label>
-
-        <div className="film-details__emoji-list">
-          {emojis.map((emojiName) => (
-            <label
-              key={emojiName}
-              className="film-details__emoji-label"
-              htmlFor={`emoji-${emojiName}`}
-              onClick={onEmojiClickHandler(emojiName)}
-            >
-              <input
-                className="film-details__emoji-item visually-hidden"
-                name="comment-emoji"
-                type="radio"
-                value={`${emojiName}`}
-                checked={emoji === emojiName}
-                readOnly
-              />
+    return (
+      <form
+        className="film-details__new-comment"
+        onKeyPress={onSendCommentHandler}
+        style={isFormError ? shakeStyle : {}}
+      >
+        <fieldset style={styles} disabled={isFormBlocked}>
+          <div className="film-details__add-emoji-label">
+            {emoji && (
               <img
-                src={`/images/emoji/${emojiName}.png`}
-                width="30"
-                height="30"
-                alt="emoji"
+                src={`/images/emoji/${emoji}.png`}
+                width="55"
+                height="55"
+                alt={`emoji-${emoji}`}
               />
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    </form>
-  );
-};
+            )}
+          </div>
+
+          <label className="film-details__comment-label">
+            <textarea
+              className="film-details__comment-input"
+              placeholder="Select reaction below and write comment here. Send it by Enter+Ctrl"
+              name="comment"
+              onChange={onCommentChange}
+            />
+          </label>
+
+          <div className="film-details__emoji-list">
+            {emojis.map((emojiName) => (
+              <label
+                key={emojiName}
+                className="film-details__emoji-label"
+                htmlFor={`emoji-${emojiName}`}
+                onClick={onEmojiClickHandler(emojiName)}
+              >
+                <input
+                  className="film-details__emoji-item visually-hidden"
+                  name="comment-emoji"
+                  type="radio"
+                  value={`${emojiName}`}
+                  checked={emoji === emojiName}
+                  readOnly
+                />
+                <img
+                  src={`/images/emoji/${emojiName}.png`}
+                  width="30"
+                  height="30"
+                  alt="emoji"
+                />
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </form>
+    );
+  },
+);

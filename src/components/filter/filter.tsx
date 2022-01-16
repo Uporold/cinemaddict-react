@@ -1,20 +1,14 @@
 import React from "react";
-import {
-  useCurrentFilterType,
-  useStatisticStatus,
-} from "../../store/app/hooks/selectors";
-import { useSetFilterType } from "../../store/app/hooks/useSetFilterType";
+import { observer } from "mobx-react-lite";
 import { FilterType } from "../../const";
-import { useAuthorizationStatus } from "../../store/auth/hooks/selectors";
 import { FilterItem } from "./components/filter-item";
+import { useStore } from "../../store";
 
-export const Filter: React.FC = (): JSX.Element => {
-  const currentFilterType = useCurrentFilterType();
-  const setFilterType = useSetFilterType();
-
-  const isAuth = useAuthorizationStatus();
-
-  const isStatisticOpen = useStatisticStatus();
+export const Filter: React.FC = observer((): JSX.Element => {
+  const {
+    appStore: { currentFilterType, setFilterType, isStatisticMode },
+    authStore: { authorizationStatus },
+  } = useStore();
 
   const onFilterItemClickHandler =
     (filterType: string) => (evt: React.MouseEvent) => {
@@ -28,12 +22,12 @@ export const Filter: React.FC = (): JSX.Element => {
         <FilterItem
           filterType={filterType}
           onFilterItemClickHandler={onFilterItemClickHandler(filterType)}
-          isAuth={isAuth}
+          isAuth={authorizationStatus}
           currentFilterType={currentFilterType}
-          isStatisticOpen={isStatisticOpen}
+          isStatisticOpen={isStatisticMode}
           key={filterType}
         />
       ))}
     </ul>
   );
-};
+});

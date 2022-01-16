@@ -1,13 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import history from "./history";
-import { Operation } from "./store/auth/auth";
-import { AppStore } from "./store/reducer";
+import { RootStore } from "./store/root-store";
 
 export const API_URL = `http://localhost:4000/`;
 
-let store: AppStore;
+let store: RootStore;
 
-export const injectStore = (_store: AppStore) => {
+export const injectStore = (_store: RootStore) => {
   store = _store;
 };
 
@@ -36,7 +35,7 @@ export const createAPI = (): AxiosInstance => {
         history.push("/error");
       }
       if (status === 401) {
-        store.dispatch(Operation.logout());
+        store.authStore.logout();
       }
 
       return Promise.reject(error?.response ?? error);

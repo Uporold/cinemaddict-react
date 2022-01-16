@@ -1,26 +1,20 @@
 import React, { useEffect, useRef } from "react";
+import { observer } from "mobx-react-lite";
 import { Header } from "../../components/header/header";
 import { Footer } from "../../components/footer/footer";
 import { InputField } from "../../components/input-field/input-field";
-import { useRegistration } from "../../store/auth/hooks/useRegistration";
-import {
-  useFormErrorMessage,
-  useFormErrorStatus,
-} from "../../store/auth/hooks/selectors";
-import { useResetErrors } from "../../store/auth/hooks/useResetErrors";
 import { ErrorsList } from "../../components/errors-list/errors-list";
+import { useStore } from "../../store";
 
-export const Registration: React.FC = (): JSX.Element => {
+export const Registration: React.FC = observer((): JSX.Element => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const loginRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = useRegistration();
-
-  const errorMessages = useFormErrorMessage();
-  const isFormError = useFormErrorStatus();
-  const resetErrors = useResetErrors();
+  const {
+    authStore: { errorMessages, isFormError, register, resetErrors },
+  } = useStore();
 
   useEffect(() => {
     return () => {
@@ -28,10 +22,10 @@ export const Registration: React.FC = (): JSX.Element => {
     };
   }, [resetErrors]);
 
-  const handleSubmit = (evt: React.FormEvent) => {
+  const handleSubmit = async (evt: React.FormEvent) => {
     evt.preventDefault();
 
-    onSubmit({
+    await register({
       email: (emailRef.current as HTMLInputElement).value,
       login: (loginRef.current as HTMLInputElement).value,
       password: (passwordRef.current as HTMLInputElement).value,
@@ -81,4 +75,4 @@ export const Registration: React.FC = (): JSX.Element => {
       <Footer />
     </>
   );
-};
+});

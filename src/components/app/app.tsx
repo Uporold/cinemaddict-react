@@ -1,19 +1,20 @@
 import React from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { observer } from "mobx-react-lite";
 import { Main } from "../../pages/main/main";
 import history from "../../history";
 import { FilmDetails } from "../../pages/film-details/film-details";
 import { PagePath } from "../../const";
 import { Login } from "../../pages/login/login";
 import AuthVerify from "../../utils/auth-verify";
-import { useLogout } from "../../store/auth/hooks/useLogout";
-import { useAuthorizationStatus } from "../../store/auth/hooks/selectors";
 import { Registration } from "../../pages/registration/registration";
 import { NotFound } from "../not-found/not-found";
+import { useStore } from "../../store";
 
-export const App: React.FC = (): JSX.Element => {
-  const logout = useLogout();
-  const authorizationStatus = useAuthorizationStatus();
+export const App: React.FC = observer((): JSX.Element => {
+  const {
+    authStore: { authorizationStatus, logout },
+  } = useStore();
   return (
     <>
       <Router history={history}>
@@ -24,7 +25,11 @@ export const App: React.FC = (): JSX.Element => {
             exact
             path={PagePath.LOGIN}
             render={() => {
-              return !authorizationStatus ? <Login /> : <Redirect to="/" />;
+              return !authorizationStatus ? (
+                <Login />
+              ) : (
+                <Redirect to={PagePath.MAIN} />
+              );
             }}
           />
           <Route
@@ -34,7 +39,7 @@ export const App: React.FC = (): JSX.Element => {
               return !authorizationStatus ? (
                 <Registration />
               ) : (
-                <Redirect to="/" />
+                <Redirect to={PagePath.MAIN} />
               );
             }}
           />
@@ -44,4 +49,4 @@ export const App: React.FC = (): JSX.Element => {
       </Router>
     </>
   );
-};
+});

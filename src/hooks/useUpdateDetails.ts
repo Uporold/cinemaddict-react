@@ -1,8 +1,10 @@
 import { Movie, UserDetailsToUpdate } from "../types";
-import { useUpdateUserDetails } from "../store/movie/hooks/useUpdateUserDetails";
+import { useStore } from "../store";
 
 export const useUpdateUserDetailsHandler = (movie: Movie) => {
-  const updateUserDetails = useUpdateUserDetails();
+  const {
+    movieStore: { updateUserDetails },
+  } = useStore();
   return (variable: keyof UserDetailsToUpdate) => () => {
     updateUserDetails(movie.id, {
       ...movie.userDetails,

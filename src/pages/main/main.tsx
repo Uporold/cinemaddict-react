@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
+import { observer } from "mobx-react-lite";
 import { Header } from "../../components/header/header";
 import { Navigation } from "./components/navigation";
 import { Sorting } from "./components/sorting";
 import { FilmsSection } from "./components/films-section";
 import { Statistic } from "./components/statistic";
 import { Footer } from "../../components/footer/footer";
-import { useStatisticStatus } from "../../store/app/hooks/selectors";
-import { useLoadMovies } from "../../store/movie/hooks/useLoadMovies";
-import { useMoviesLoadingStatus } from "../../store/movie/hooks/selectors";
 import { LoadingSpinner } from "../../components/loading-spinner/loading-spinner";
-import { useResetAppState } from "../../store/app/hooks/useResetAppState";
+import { useStore } from "../../store";
 
-export const Main: React.FC = (): JSX.Element => {
-  const isStatOpen = useStatisticStatus();
-  const loadMovies = useLoadMovies();
-  const isMoviesLoading = useMoviesLoadingStatus();
-  const resetAppState = useResetAppState();
+export const Main: React.FC = observer((): JSX.Element => {
+  const {
+    appStore: { resetAppState, isStatisticMode },
+    movieStore: { loadMovies, isMoviesLoaded, resetMovies },
+  } = useStore();
 
   useEffect(() => {
     loadMovies();
@@ -24,23 +22,24 @@ export const Main: React.FC = (): JSX.Element => {
   useEffect(() => {
     return () => {
       resetAppState();
+      resetMovies();
     };
-  }, [resetAppState]);
+  }, [resetAppState, resetMovies]);
   return (
     <>
       <Header />
       <main className="main">
         <Navigation />
-        {isStatOpen ? (
+        {isStatisticMode ? (
           <Statistic />
         ) : (
           <>
             <Sorting />
-            {!isMoviesLoading ? <FilmsSection /> : <LoadingSpinner />}
+            {isMoviesLoaded ? <FilmsSection /> : <LoadingSpinner />}
           </>
         )}
       </main>
       <Footer />
     </>
   );
-};
+});
