@@ -1,17 +1,13 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
 import { Operation } from "../comment";
-import { CommentPure } from "../../../types";
+import { useStoreDispatch } from "../../reducer";
 
-export const useSendComment = (): ((
-  movieId: number,
-  comment: CommentPure,
-) => void) => {
-  const dispatch = useDispatch();
+export const useSendComment = () => {
+  const dispatch = useStoreDispatch();
 
   return useCallback(
     (movieId, comment) => {
-      dispatch(Operation.sendComment(movieId, comment));
+      return dispatch(Operation.sendComment(movieId, comment));
     },
     [dispatch],
   );

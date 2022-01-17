@@ -1,7 +1,7 @@
 import { Action, applyMiddleware, combineReducers, createStore } from "redux";
-import { AxiosInstance } from "axios";
 import thunk, { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { useDispatch } from "react-redux";
 import { reducer as movies, ActionCreator as DataActions } from "./movie/movie";
 import { reducer as app, ActionCreator as AppActions } from "./app/app";
 import {
@@ -34,6 +34,7 @@ export const store = createStore(
 );
 
 export type AppStore = typeof store;
+export type AppDispatch = typeof store.dispatch;
 
 export type AllReduxActions = ReturnType<
   InferActionsTypes<typeof combinedActions>
@@ -43,9 +44,9 @@ export type InferActionsTypes<T> = T extends { [key: string]: infer U }
   ? U
   : never;
 
-export type BaseThunkActionType<A extends Action = Action> = ThunkAction<
-  Promise<void>,
-  RootState,
-  AxiosInstance,
-  A
->;
+export type BaseThunkActionType<
+  A extends Action = Action,
+  R = void,
+> = ThunkAction<R, RootState, unknown, A>;
+
+export const useStoreDispatch = () => useDispatch<AppDispatch>();

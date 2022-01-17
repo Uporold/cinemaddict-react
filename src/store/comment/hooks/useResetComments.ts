@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
 import { useCallback } from "react";
 import { ActionCreator } from "../comment";
+import { useStoreDispatch } from "../../reducer";
 
 export const useResetComments = () => {
-  const dispatch = useDispatch();
+  const dispatch = useStoreDispatch();
 
   return useCallback(() => {
     dispatch(ActionCreator.resetComments());

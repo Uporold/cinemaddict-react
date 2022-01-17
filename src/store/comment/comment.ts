@@ -1,9 +1,5 @@
 import { Comment, CommentPure } from "../../types";
-import {
-  AllReduxActions,
-  BaseThunkActionType,
-  InferActionsTypes,
-} from "../reducer";
+import { BaseThunkActionType, InferActionsTypes } from "../reducer";
 import { CommentsService } from "../../services/comments-service/comments-service";
 
 export const initialState = {
@@ -14,8 +10,7 @@ export const initialState = {
 
 type InitialStateType = typeof initialState;
 type CommentActionType = ReturnType<InferActionsTypes<typeof ActionCreator>>;
-type ThunkActionType = BaseThunkActionType<CommentActionType>;
-type ThunkActionTypeAll = BaseThunkActionType<AllReduxActions>;
+type ThunkActionType<R = void> = BaseThunkActionType<CommentActionType, R>;
 
 const ActionType = {
   SET_MOVIE_COMMENTS: `SET_MOVIE_COMMENTS`,
@@ -62,12 +57,16 @@ export const Operation = {
     },
 
   sendComment:
-    (movieId: number, comment: CommentPure): ThunkActionTypeAll =>
+    (
+      movieId: number,
+      comment: CommentPure,
+    ): ThunkActionType<Promise<boolean>> =>
     async (dispatch) => {
       dispatch(ActionCreator.setFormBlockStatus(true));
       try {
         await CommentsService.sendComment(movieId, comment);
-        await dispatch(Operation.loadMovieComments(movieId));
+        dispatch(Operation.loadMovieComments(movieId));
+        return true;
       } catch (err) {
         dispatch(ActionCreator.setFormErrorStatus(true));
         setTimeout(() => {
@@ -76,13 +75,14 @@ export const Operation = {
       } finally {
         dispatch(ActionCreator.setFormBlockStatus(false));
       }
+      return false;
     },
 
   deleteComment:
     (commentId: number, movieId: number): ThunkActionType =>
     async (dispatch) => {
       await CommentsService.deleteComment(commentId);
-      await dispatch(Operation.loadMovieComments(movieId));
+      dispatch(Operation.loadMovieComments(movieId));
     },
 };
 

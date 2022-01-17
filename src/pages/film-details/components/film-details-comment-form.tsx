@@ -44,16 +44,21 @@ export const FilmDetailsCommentForm: React.FC<Props> = ({
     setComment(evt.target.value);
   };
 
-  const onSendCommentHandler = (evt: React.KeyboardEvent<HTMLFormElement>) => {
+  const onSendCommentHandler = async (
+    evt: React.KeyboardEvent<HTMLFormElement>,
+  ) => {
     if (evt.code === "Enter" && evt.ctrlKey) {
       const data = {
         message,
         emotion: emoji,
       };
-      sendComment(movieId, data);
-      evt.currentTarget.reset();
-      setComment(``);
-      setEmoji(``);
+      const { currentTarget } = evt;
+      const isSucceeded = await sendComment(movieId, data);
+      if (isSucceeded) {
+        currentTarget.reset();
+        setComment(``);
+        setEmoji(``);
+      }
     }
   };
   return (
