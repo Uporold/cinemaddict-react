@@ -1,7 +1,6 @@
 import { createModel } from "@rematch/core";
 import { Movie, UserDetails, UserDetailsToUpdate } from "../../types";
 import { RootModel } from "../reducer";
-import { API_URL } from "../../api";
 import { MoviesService } from "../../services/movies-service/movies-service";
 
 const CUT_LENGTH = 5;
@@ -10,7 +9,8 @@ export const initialState = {
   movies: [] as Movie[],
   currentMovie: {} as Movie,
   showedMoviesCount: CUT_LENGTH as number,
-  isMoviesLoading: false,
+  isMoviesLoaded: false,
+  isMovieLoaded: false,
 };
 
 export const movies = createModel<RootModel>()({
@@ -34,29 +34,32 @@ export const movies = createModel<RootModel>()({
           ? { ...item, userDetails: payload.userDetails }
           : item,
       );
-      state.currentMovie =
-        payload.movieId === state.currentMovie.id &&
-        window.location.href !== API_URL
-          ? { ...state.currentMovie, userDetails: payload.userDetails }
-          : state.currentMovie;
     },
     SET_MOVIES_LOADING_STATUS(state, payload: boolean) {
-      state.isMoviesLoading = payload;
+      state.isMoviesLoaded = payload;
+    },
+    SET_MOVIE_LOADING_STATUS(state, payload: boolean) {
+      state.isMovieLoaded = payload;
+    },
+    RESET_MOVIES(state) {
+      state.movies = [];
+      state.isMoviesLoaded = false;
     },
     RESET_CURRENT_MOVIE(state) {
       state.currentMovie = {} as Movie;
+      state.isMovieLoaded = false;
     },
   },
   effects: (dispatch) => ({
     async loadMovies() {
-      dispatch.movies.SET_MOVIES_LOADING_STATUS(true);
       const loadedMovies = await MoviesService.loadMovies();
       dispatch.movies.SET_MOVIES(loadedMovies);
-      dispatch.movies.SET_MOVIES_LOADING_STATUS(false);
+      dispatch.movies.SET_MOVIES_LOADING_STATUS(true);
     },
     async loadMovie(movieId: number) {
       const movie = await MoviesService.loadMovie(movieId);
       dispatch.movies.SET_CURRENT_MOVIE(movie);
+      dispatch.movies.SET_MOVIE_LOADING_STATUS(true);
     },
     async updateUserDetails(payload: {
       movieId: number;

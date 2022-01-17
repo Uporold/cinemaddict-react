@@ -3,6 +3,7 @@ import { Movie } from "../../../types";
 import {
   getCurrentMovie,
   getMovie,
+  getMovieLoadingStatus,
   getMovies,
   getMoviesCountByCurrentFilter,
   getMoviesCountByFilter,
@@ -34,6 +35,10 @@ export const useCurrentMovie = (id: number): Movie => {
 
 export const useMoviesLoadingStatus = (): boolean => {
   return useSelector(getMoviesLoadingStatus);
+};
+
+export const useMovieLoadingStatus = (): boolean => {
+  return useSelector(getMovieLoadingStatus);
 };
 
 export const useMoviesCountByCurrentFilter = (): number => {

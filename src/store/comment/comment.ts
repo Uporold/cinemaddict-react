@@ -15,19 +15,14 @@ export const comments = createModel<RootModel>()({
     SET_COMMENTS(state, payload: Comment[]) {
       state.comments = payload;
     },
-    ADD_COMMENT(state, payload: Comment) {
-      state.comments = [payload, ...state.comments];
-    },
     SET_FORM_BLOCK_STATUS(state, payload: boolean) {
       state.isFormBlocked = payload;
     },
     SET_FORM_ERROR_STATUS(state, payload: boolean) {
       state.isFormError = payload;
     },
-    DELETE_COMMENT(state, payload: number) {
-      state.comments = state.comments.filter(
-        (comment) => comment.id !== payload,
-      );
+    RESET_COMMENTS(state) {
+      state.comments = [];
     },
   },
   effects: (dispatch) => ({
@@ -39,8 +34,9 @@ export const comments = createModel<RootModel>()({
       dispatch.comments.SET_FORM_BLOCK_STATUS(true);
       try {
         const { movieId, comment } = payload;
-        const newComment = await CommentsService.sendComment(movieId, comment);
-        dispatch.comments.ADD_COMMENT(newComment);
+        await CommentsService.sendComment(movieId, comment);
+        dispatch.comments.loadMovieComments(movieId);
+        return true;
       } catch (err) {
         dispatch.comments.SET_FORM_ERROR_STATUS(true);
         setTimeout(() => {
@@ -49,10 +45,12 @@ export const comments = createModel<RootModel>()({
       } finally {
         dispatch.comments.SET_FORM_BLOCK_STATUS(false);
       }
+      return false;
     },
-    async deleteComment(commentId: number) {
+    async deleteComment(payload: { commentId: number; movieId: number }) {
+      const { commentId, movieId } = payload;
       await CommentsService.deleteComment(commentId);
-      dispatch.comments.DELETE_COMMENT(commentId);
+      dispatch.comments.loadMovieComments(movieId);
     },
   }),
 });

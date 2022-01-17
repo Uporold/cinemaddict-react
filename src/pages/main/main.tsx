@@ -10,12 +10,14 @@ import { useLoadMovies } from "../../store/movie/hooks/useLoadMovies";
 import { useMoviesLoadingStatus } from "../../store/movie/hooks/selectors";
 import { LoadingSpinner } from "../../components/loading-spinner/loading-spinner";
 import { useResetAppState } from "../../store/app/hooks/useResetAppState";
+import { useResetMovies } from "../../store/movie/hooks/useResetMovies";
 
 export const Main: React.FC = (): JSX.Element => {
   const isStatOpen = useStatisticStatus();
   const loadMovies = useLoadMovies();
-  const isMoviesLoading = useMoviesLoadingStatus();
+  const isMoviesLoaded = useMoviesLoadingStatus();
   const resetAppState = useResetAppState();
+  const resetMovies = useResetMovies();
 
   useEffect(() => {
     loadMovies();
@@ -24,8 +26,9 @@ export const Main: React.FC = (): JSX.Element => {
   useEffect(() => {
     return () => {
       resetAppState();
+      resetMovies();
     };
-  }, [resetAppState]);
+  }, [resetAppState, resetMovies]);
   return (
     <>
       <Header />
@@ -36,7 +39,7 @@ export const Main: React.FC = (): JSX.Element => {
         ) : (
           <>
             <Sorting />
-            {!isMoviesLoading ? <FilmsSection /> : <LoadingSpinner />}
+            {isMoviesLoaded ? <FilmsSection /> : <LoadingSpinner />}
           </>
         )}
       </main>
