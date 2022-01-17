@@ -18,11 +18,6 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export type AppStore = typeof store;
 
-export type AppThunk<R = Promise<void>> = ThunkAction<
-  R,
-  RootState,
-  unknown,
-  AnyAction
->;
+export type AppThunk<R = void> = ThunkAction<R, RootState, unknown, AnyAction>;
 
 export const useStoreDispatch = () => useDispatch<AppDispatch>();

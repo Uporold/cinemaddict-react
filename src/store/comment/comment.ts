@@ -42,7 +42,7 @@ export const Operation = {
       dispatch(commentsSlice.actions.SET_FORM_BLOCK_STATUS(true));
       try {
         await CommentsService.sendComment(movieId, comment);
-        await dispatch(Operation.loadMovieComments(movieId));
+        dispatch(Operation.loadMovieComments(movieId));
         return true;
       } catch (err) {
         dispatch(commentsSlice.actions.SET_FORM_ERROR_STATUS(true));
@@ -59,7 +59,7 @@ export const Operation = {
     (commentId: number, movieId: number): AppThunk =>
     async (dispatch) => {
       await CommentsService.deleteComment(commentId);
-      await dispatch(Operation.loadMovieComments(movieId));
+      dispatch(Operation.loadMovieComments(movieId));
     },
 };
 
