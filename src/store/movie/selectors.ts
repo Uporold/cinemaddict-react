@@ -69,4 +69,7 @@ export const getCurrentMovie = (id: number) =>
   );
 
 export const getMoviesLoadingStatus = (state: RootState): boolean =>
-  state.movies.isMoviesLoading;
+  state.movies.isMoviesLoaded;
+
+export const getMovieLoadingStatus = (state: RootState): boolean =>
+  state.movies.isMovieLoaded;

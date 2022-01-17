@@ -91,7 +91,7 @@ export const Operation = {
       }
     },
 
-  logout: (): AppThunk => (dispatch) => {
+  logout: (): AppThunk<void> => (dispatch) => {
     AuthService.logout();
     dispatch(authSlice.actions.SET_AUTH_STATUS(false));
     dispatch(appSlice.actions.RESET_APP_STATE());

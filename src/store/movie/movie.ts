@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Movie, UserDetails, UserDetailsToUpdate } from "../../types";
 import { AppThunk } from "../reducer";
-import { API_URL } from "../../api";
 import { MoviesService } from "../../services/movies-service/movies-service";
 
 const CUT_LENGTH = 5;
@@ -10,7 +9,8 @@ export const initialState = {
   movies: [] as Movie[],
   currentMovie: {} as Movie,
   showedMoviesCount: CUT_LENGTH as number,
-  isMoviesLoading: false,
+  isMoviesLoaded: false,
+  isMovieLoaded: false,
 };
 
 export const moviesSlice = createSlice({
@@ -35,27 +35,29 @@ export const moviesSlice = createSlice({
           ? { ...item, userDetails: action.payload.userDetails }
           : item,
       );
-      state.currentMovie =
-        action.payload.movieId === state.currentMovie.id &&
-        window.location.href !== API_URL
-          ? { ...state.currentMovie, userDetails: action.payload.userDetails }
-          : state.currentMovie;
     },
     SET_MOVIES_LOADING_STATUS(state, action) {
-      state.isMoviesLoading = action.payload;
+      state.isMoviesLoaded = action.payload;
+    },
+    SET_MOVIE_LOADING_STATUS(state, action) {
+      state.isMovieLoaded = action.payload;
+    },
+    RESET_MOVIES(state) {
+      state.movies = [];
+      state.isMoviesLoaded = false;
     },
     RESET_CURRENT_MOVIE(state) {
       state.currentMovie = {} as Movie;
+      state.isMovieLoaded = false;
     },
   },
 });
 
 export const Operation = {
   loadMovies: (): AppThunk => async (dispatch) => {
-    dispatch(moviesSlice.actions.SET_MOVIES_LOADING_STATUS(true));
     const loadedMovies = await MoviesService.loadMovies();
     dispatch(moviesSlice.actions.SET_MOVIES(loadedMovies));
-    dispatch(moviesSlice.actions.SET_MOVIES_LOADING_STATUS(false));
+    dispatch(moviesSlice.actions.SET_MOVIES_LOADING_STATUS(true));
   },
 
   loadMovie:
@@ -63,6 +65,7 @@ export const Operation = {
     async (dispatch) => {
       const movie = await MoviesService.loadMovie(movieId);
       dispatch(moviesSlice.actions.SET_CURRENT_MOVIE(movie));
+      dispatch(moviesSlice.actions.SET_MOVIE_LOADING_STATUS(true));
     },
 
   updateUserDetails:
@@ -81,6 +84,7 @@ export const Operation = {
     },
 };
 
-export const { RESET_CURRENT_MOVIE, SHOW_MORE_MOVIES } = moviesSlice.actions;
+export const { RESET_CURRENT_MOVIE, RESET_MOVIES, SHOW_MORE_MOVIES } =
+  moviesSlice.actions;
 
 export default moviesSlice.reducer;

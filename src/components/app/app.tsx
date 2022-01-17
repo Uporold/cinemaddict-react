@@ -24,7 +24,11 @@ export const App: React.FC = (): JSX.Element => {
             exact
             path={PagePath.LOGIN}
             render={() => {
-              return !authorizationStatus ? <Login /> : <Redirect to="/" />;
+              return !authorizationStatus ? (
+                <Login />
+              ) : (
+                <Redirect to={PagePath.MAIN} />
+              );
             }}
           />
           <Route
@@ -34,7 +38,7 @@ export const App: React.FC = (): JSX.Element => {
               return !authorizationStatus ? (
                 <Registration />
               ) : (
-                <Redirect to="/" />
+                <Redirect to={PagePath.MAIN} />
               );
             }}
           />

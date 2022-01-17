@@ -6,12 +6,12 @@ import { CommentPure } from "../../../types";
 export const useSendComment = (): ((
   movieId: number,
   comment: CommentPure,
-) => void) => {
+) => Promise<boolean>) => {
   const dispatch = useStoreDispatch();
 
   return useCallback(
     (movieId, comment) => {
-      dispatch(Operation.sendComment(movieId, comment));
+      return dispatch(Operation.sendComment(movieId, comment));
     },
     [dispatch],
   );
